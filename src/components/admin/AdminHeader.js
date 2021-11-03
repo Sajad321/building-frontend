@@ -86,7 +86,7 @@ function AdminHeader(props) {
                   <a
                     href="#"
                     className={"nav_link " + props.Active.Institutes}
-                    onClick={props.InstitutesButton}
+                    onClick={props.handleOfficesButton}
                   >
                     {" "}
                     <FontAwesomeIcon
@@ -104,18 +104,18 @@ function AdminHeader(props) {
                   </a>{" "}
                   <a
                     href="#"
-                    className={"nav_link " + props.Active.Students}
-                    onClick={() => setStudentsModalShow(true)}
+                    className={"nav_link " + props.Active.Institutes}
+                    onClick={props.handleExpensesButton}
                   >
                     {" "}
                     <FontAwesomeIcon
-                      icon="user-graduate"
-                      className={"nav_logo-icon " + props.Active.Students}
+                      icon="school"
+                      className={"nav_logo-icon " + props.Active.Institutes}
                       color="white"
                       size="2x"
                     />
                     <span
-                      className={"nav_name " + props.Active.Students}
+                      className={"nav_name " + props.Active.Institutes}
                       id="nav-text"
                     >
                       الصرفيات

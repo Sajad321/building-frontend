@@ -2,10 +2,10 @@ import React, { Fragment, useState, useEffect } from "react";
 import AdminHeader from "./AdminHeader";
 import AdminFooter from "./AdminFooter";
 import MainAdmin from "./MainAdmin";
-import StudentsInstallments from "./Lists/StudentsInstallments";
-import StudentsAttendance from "./Lists/StudentsAttendance";
-import AddStudent from "./Forms/AddStudent";
-import AddInstallment from "./Forms/AddInstallment";
+import Offices from "./Lists/Offices";
+import Expenses from "./Lists/Expenses";
+import AddOffice from "./Forms/AddOffice";
+import AddReceipt from "./Forms/AddReceipt";
 const apiUrl = process.env.API_URL;
 
 function Admin(props) {
@@ -45,119 +45,16 @@ function Admin(props) {
   };
   const [dataToChange, setDataToChange] = useState({});
 
-  const [installmentsData, setInstallmentsData] = useState({
-    students: [],
-    installments: [],
-  });
-  const [attendanceData, setAttendanceData] = useState({
-    students: [],
-    attendance: [],
-  });
-  const [searchedInstallmentsData, setSearchedInstallmentsData] = useState({
-    ...installmentsData,
-  });
-  const [searchedAttendanceData, setSearchedAttendanceData] = useState({
-    ...attendanceData,
-  });
-
-  const getInstallments = () => {
-    try {
-      const response = syncFetch(`${apiUrl}/student-install`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer`,
-        },
-      });
-      const responseData = response.json();
-      setInstallmentsData({
-        students: responseData.students.sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        }),
-        installments: responseData.installments.sort((a, b) => {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }),
-      });
-
-      setSearchedInstallmentsData({
-        students: responseData.students.sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        }),
-        installments: responseData.installments.sort((a, b) => {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }),
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  const getAttendance = () => {
-    try {
-      const response = syncFetch(`${apiUrl}/students-attendance`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer`,
-        },
-      });
-      const responseData = response.json();
-      setAttendanceData({
-        students: responseData.students.sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        }),
-        attendance: responseData.attendance.sort((a, b) => {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }),
-      });
-      setSearchedAttendanceData({
-        students: responseData.students.sort((a, b) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        }),
-        attendance: responseData.attendance.sort((a, b) => {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }),
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  useEffect(() => {
-    getInstallments();
-    getAttendance();
-  }, []);
-
   const AdminHeaderFunction = (Act) => {
     return (
       <AdminHeader
         logoutWithRedirect={props.logoutWithRedirect}
         Active={Act}
         MainButton={handleMainButton}
-        StudentsInstallmentsButton={handleStudentsInstallmentsButton}
-        StudentsAttendanceButton={handleStudentsAttendanceButton}
-        AddStudentButton={handleAddStudentButton}
-        AddInstallmentButton={handleAddInstallmentButton}
+        handleOfficesButton={handleOfficesButton}
+        handleExpensesButton={handleExpensesButton}
+        handleAddOfficeButton={handleAddOfficeButton}
+        handleAddReceiptButton={handleAddReceiptButton}
         sideEvent={sideEvent}
         sideBarShow={sideBarShow}
         setSideBarShow={setSideBarShow}
@@ -172,25 +69,23 @@ function Admin(props) {
     getAttendance();
   };
 
-  const handleStudentsInstallmentsButton = (institute_id) => {
-    setInstitute(institute_id);
-    setPage("StudentsInstallments");
+  const handleOfficesButton = () => {
+    setPage("Offices");
     setDataToChange({});
   };
 
-  const handleStudentsAttendanceButton = (institute_id) => {
-    setInstitute(institute_id);
-    setPage("StudentsAttendance");
+  const handleExpensesButton = () => {
+    setPage("Expenses");
     setDataToChange({});
   };
 
-  const handleAddStudentButton = () => {
-    setPage("AddStudent");
+  const handleAddOfficeButton = () => {
+    setPage("AddOffice");
     setDataToChange({});
   };
 
-  const handleAddInstallmentButton = () => {
-    setPage("AddInstallment");
+  const handleAddReceiptButton = () => {
+    setPage("AddReceipt");
     setDataToChange({});
   };
 
@@ -215,51 +110,37 @@ function Admin(props) {
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
     );
-  } else if (page == "StudentsInstallments") {
+  } else if (page == "Offices") {
     return (
       <Fragment>
         {AdminHeaderFunction({ Students: "active" })}
         {/* End of Navbar */}
-        {/* StudentsInstallments */}
-        <StudentsInstallments
+        {/* Offices */}
+        <Offices
           edit={handleEditInstallmentButton}
           page={handleMainButton}
           sideBarShow={sideBarShow}
-          institutes={institutes}
-          institute={institute}
-          data={installmentsData}
-          setData={setInstallmentsData}
-          searchedData={searchedInstallmentsData}
-          setSearchedData={setSearchedInstallmentsData}
         />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
     );
-  } else if (page == "StudentsAttendance") {
+  } else if (page == "Expenses") {
     return (
       <Fragment>
         {AdminHeaderFunction({ Students: "active" })}
         {/* End of Navbar */}
-        {/* StudentsAttendance */}
-        <StudentsAttendance
-          sideBarShow={sideBarShow}
-          institutes={institutes}
-          institute={institute}
-          data={attendanceData}
-          setData={setAttendanceData}
-          searchedData={searchedAttendanceData}
-          setSearchedData={setSearchedAttendanceData}
-        />
+        {/* Expenses */}
+        <Expenses sideBarShow={sideBarShow} />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
     );
-  } else if (page == "AddStudent") {
+  } else if (page == "AddReceipt") {
     return (
       <Fragment>
         {AdminHeaderFunction({ Add: "active" })}
         {/* End of Navbar */}
-        {/* AddStudent */}
-        <AddStudent
+        {/* AddReceipt */}
+        <AddReceipt
           page={handleMainButton}
           dataToChange={dataToChange}
           sideBarShow={sideBarShow}
@@ -267,13 +148,13 @@ function Admin(props) {
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
     );
-  } else if (page == "AddInstallment") {
+  } else if (page == "AddOffice") {
     return (
       <Fragment>
         {AdminHeaderFunction({ Add: "active" })}
         {/* End of Navbar */}
-        {/* AddInstitute */}
-        <AddInstallment
+        {/* AddOffice */}
+        <AddOffice
           page={handleMainButton}
           dataToChange={dataToChange}
           sideBarShow={sideBarShow}
