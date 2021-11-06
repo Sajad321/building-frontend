@@ -9,11 +9,10 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
   const [dataToSend, setDataToSend] = useState({
     id: "",
     name: "",
-    dob: "",
-    institute_id: "",
-    phone: "",
-    note: "",
-    photo: null,
+    date_of_receipt: "",
+    date_of_claiming: "",
+    amount: 0,
+    notes: "",
   });
   const [saving, setSaving] = useState(false);
   useEffect(() => {
@@ -40,45 +39,19 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
   }, []);
   const handleNameChange = (e) =>
     setDataToSend({ ...dataToSend, name: e.target.value });
-  const handleInstituteChange = (e) => {
-    setDataToSend({ ...dataToSend, institute_id: Number(e.target.value) });
+  const handleAmountChange = (e) => {
+    setDataToSend({ ...dataToSend, amount: Number(e.target.value) });
   };
-  const handleDateChange = (e) =>
-    setDataToSend({ ...dataToSend, dob: e.target.value });
-  const handlePhoneChange = (e) =>
-    setDataToSend({ ...dataToSend, phone: Number(e.target.value) });
-  const handleNoteChange = (e) =>
-    setDataToSend({ ...dataToSend, note: e.target.value });
-  const handlePhotoChange = (e) => {
-    setDataToSend({
-      ...dataToSend,
-      photo: new Blob([e.target.files[0]], { type: "image/jpeg" }),
-    });
-    var fr = new FileReader();
-    fr.onload = function (event) {
-      document.getElementById("myimage").src = event.target.result;
-    };
-    fr.readAsDataURL(e.target.files[0]);
-  };
-  if (dataToSend.photo != null) {
-    var fr = new FileReader();
-    fr.onload = function (event) {
-      document.getElementById("myimage").src = event.target.result;
-    };
-    fr.readAsDataURL(dataToSend.photo);
-  }
-  const saveStudent = async () => {
+  const handleDateOfReceiptChange = (e) =>
+    setDataToSend({ ...dataToSend, date_of_receipt: e.target.value });
+  const handleDateOfClaimingChange = (e) =>
+    setDataToSend({ ...dataToSend, date_of_claiming: e.target.value });
+  const handleNotesChange = (e) =>
+    setDataToSend({ ...dataToSend, notes: e.target.value });
+
+  const saveOffice = async () => {
     try {
       setSaving(true);
-      let formData = new FormData();
-      // for (let name in dataToSend) {
-      //   formData.append(name, dataToSend[name]);
-      // }
-      // formData.append("name", dataToSend.name);
-      formData.append("photo", dataToSend.photo);
-      // for (var key of formData.entries()) {
-      //   console.log(key[0] + ", " + key[1]);
-      // }
       const response = await fetch(
         `${apiUrl}/student` +
           `${
@@ -95,7 +68,7 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
           // headers: {
           //   "Content-Type": "multipart/form-data",
           // },
-          body: dataToSend.photo != null ? formData : null,
+
           // JSON.stringify({
           //   ...dataToSend,
           //   institute_id: Number(dataToSend.institute_id),
@@ -103,23 +76,10 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
           // }),
         }
       );
-      if (
-        (document.getElementById("myimage").src !=
-          "http://localhost:8080/index.html") &
-        (dataToSend.id != "")
-      ) {
-        let imgData = new FormData();
 
-        imgData.append("photo", dataToSend.photo);
-        const responseImg = await fetch(
-          `${apiUrl}/photo?student_id=${Number(dataToSend.id)}`,
-          { method: "PATCH", body: imgData }
-        );
-        const responseBlob = await responseImg.blob();
-      }
       const responseData = await response.json();
 
-      toast.success("تم حفظ الطالب");
+      toast.success("تم حفظ المكتب");
       page();
     } catch (error) {
       console.log(error.message);
@@ -129,7 +89,7 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveStudent();
+    saveOffice();
   };
   return (
     <section className="main">
@@ -143,16 +103,7 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
           id="main-view"
         >
           <div className="row pt-md-3 pr-2 pl-2 mt-md-3 mb-5">
-            <div className="col-5">
-              <div className="col-2 offset-6 order-last order-md-first mt-5">
-                {dataToSend.photo ? (
-                  <img id="myimage" className="img-student-attendance" />
-                ) : (
-                  <img src="" id="myimage" className="img-student-attendance" />
-                )}
-              </div>
-            </div>
-            <div className="col-7 p-2">
+            <div className="col-7 p-2 offset-5">
               <form onSubmit={handleSubmit}>
                 <div className="form-group row">
                   <div className="col-7 offset-1 order-last order-md-first">
@@ -170,69 +121,62 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
                     htmlFor="name"
                     className="col-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    اسم الطالب
-                  </label>
-                </div>
-                <div className="form-group row">
-                  <div className="col-7 offset-1 order-last order-md-first">
-                    <select
-                      id="institute"
-                      onChange={handleInstituteChange}
-                      className="form-control"
-                      dir="rtl"
-                      value={dataToSend.institute_id}
-                      required
-                    >
-                      <option selected>اختر</option>
-                      {data.institutes.map((institute) => (
-                        <option key={institute.id} value={institute.id}>
-                          {institute.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <label
-                    htmlFor="institute"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    المعهد
+                    اسم المكتب
                   </label>
                 </div>
                 <div className="form-group row">
                   <div className="col-7 offset-1 order-last order-md-first">
                     <input
-                      id="phone"
-                      type="text"
-                      placeholder="07XX-XXXXXXX"
-                      onChange={handlePhoneChange}
+                      id="date_of_receipt"
+                      type="date"
                       className="form-control text"
-                      value={dataToSend.phone}
+                      onChange={handleDateOfReceiptChange}
+                      value={dataToSend.date_of_receipt}
+                      required
                     ></input>
                   </div>
                   <label
-                    htmlFor="phone"
+                    htmlFor="date_of_receipt"
                     className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    رقم الهاتف
+                    تاريخ الاستلام
                   </label>
                 </div>
 
                 <div className="form-group row">
                   <div className="col-7 offset-1 order-last order-md-first">
                     <input
-                      id="date"
+                      id="date_of_claiming"
                       type="date"
                       className="form-control text"
-                      onChange={handleDateChange}
-                      value={dataToSend.dob}
-                      // required
+                      onChange={handleDateOfClaimingChange}
+                      value={dataToSend.date_of_claiming}
+                      required
                     ></input>
                   </div>
                   <label
-                    htmlFor="date"
+                    htmlFor="date_of_claiming"
                     className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    تاريخ الميلاد
+                    تاريخ الاستحقاق
+                  </label>
+                </div>
+                <div className="form-group row">
+                  <div className="col-7 offset-1 order-last order-md-first">
+                    <input
+                      id="amount"
+                      type="number"
+                      className="form-control text"
+                      onChange={handleAmountChange}
+                      value={dataToSend.amount}
+                      required
+                    ></input>
+                  </div>
+                  <label
+                    htmlFor="amount"
+                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
+                  >
+                    المبلغ
                   </label>
                 </div>
                 <div className="form-group row">
@@ -240,10 +184,10 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
                     <input
                       id="note"
                       type="text"
-                      onChange={handleNoteChange}
+                      onChange={handleNotesChange}
                       placeholder="الملاحظات"
                       className="form-control text"
-                      value={dataToSend.note}
+                      value={dataToSend.notes}
                       // required
                     ></input>
                   </div>
@@ -254,24 +198,7 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
                     الملاحظات
                   </label>
                 </div>
-                <div className="form-group row">
-                  <div className="col-7 offset-1 order-last order-md-first">
-                    <input
-                      id="photo"
-                      type="file"
-                      onChange={handlePhotoChange}
-                      className="form-control text"
-                      accept=".jpg,.jpeg"
-                      // required
-                    ></input>
-                  </div>
-                  <label
-                    htmlFor="photo"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    الصورة
-                  </label>
-                </div>
+
                 <div className="form-group row">
                   <div className="col-3 offset-2 mt-3">
                     {!saving ? (
@@ -279,7 +206,7 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
                         type="submit"
                         className="btn btn-success btn-block"
                       >
-                        حفظ الطالب
+                        حفظ المكتب
                       </button>
                     ) : (
                       <button disabled className="btn btn-success btn-block">

@@ -5,9 +5,9 @@ const apiUrl = process.env.API_URL;
 function AddInstitute({ page, dataToChange, sideBarShow }) {
   const [dataToSend, setDataToSend] = useState({
     id: "",
-    name: "",
-    institute_id: "",
-    date: "",
+    receipt_number: "",
+    expense_type: "",
+    amount: "",
   });
   const [institutes, setInstitutes] = useState([]);
   useEffect(() => {
@@ -31,14 +31,14 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
       setDataToSend(dataToChange);
     }
   }, []);
-  const handleNameChange = (e) =>
-    setDataToSend({ ...dataToSend, name: e.target.value });
-  const handleInstituteChange = (e) =>
-    setDataToSend({ ...dataToSend, institute_id: Number(e.target.value) });
-  const handleDateChange = (e) =>
-    setDataToSend({ ...dataToSend, date: e.target.value });
+  const handleReceiptNumberChange = (e) =>
+    setDataToSend({ ...dataToSend, receipt_number: e.target.value });
+  const handleExpenseTypeChange = (e) =>
+    setDataToSend({ ...dataToSend, expense_type: e.target.value });
+  const handleAmountChange = (e) =>
+    setDataToSend({ ...dataToSend, amount: Number(e.target.value) });
   const [saving, setSaving] = useState(false);
-  const saveInstallment = async () => {
+  const saveReceipt = async () => {
     try {
       setSaving(true);
       const response = await fetch(
@@ -59,7 +59,7 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
 
       const responseData = await response.json();
 
-      toast.success("تم حفظ القسط");
+      toast.success("تم حفظ الوصل");
       page();
     } catch (error) {
       console.log(error.message);
@@ -69,7 +69,7 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveInstallment();
+    saveReceipt();
   };
   return (
     <section className="main">
@@ -88,11 +88,11 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
                 <div className="form-group row">
                   <div className="col-md-4 offset-md-6 order-last order-md-first">
                     <input
-                      type="text"
-                      placeholder="الاسم"
+                      type="number"
+                      placeholder="رقم الوصل"
                       className="form-control text"
-                      onChange={handleNameChange}
-                      value={dataToSend.name}
+                      onChange={handleReceiptNumberChange}
+                      value={dataToSend.receipt_number}
                       required
                     ></input>
                   </div>
@@ -100,50 +100,43 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
                     htmlFor="name"
                     className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    اسم القسط
-                  </label>
-                </div>
-                <div className="form-group row">
-                  <div className="col-md-4 offset-md-6 order-last order-md-first">
-                    <select
-                      id="institute"
-                      onChange={handleInstituteChange}
-                      className="form-control"
-                      dir="rtl"
-                      value={dataToSend.institute_id}
-                      required
-                    >
-                      <option selected>اختر</option>
-                      {institutes.map((institute) => (
-                        <option key={institute.id} value={institute.id}>
-                          {institute.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <label
-                    htmlFor="institute"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    المعهد
+                    رقم الوصل
                   </label>
                 </div>
                 <div className="form-group row">
                   <div className="col-md-4 offset-md-6 order-last order-md-first">
                     <input
-                      id="date"
-                      type="date"
+                      type="text"
+                      placeholder="نوع الصرف"
                       className="form-control text"
-                      onChange={handleDateChange}
-                      value={dataToSend.date}
+                      onChange={handleExpenseTypeChange}
+                      value={dataToSend.expense_type}
                       required
                     ></input>
                   </div>
                   <label
-                    htmlFor="date"
+                    htmlFor="expense_type"
                     className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    التاريخ
+                    نوع الصرف
+                  </label>
+                </div>
+                <div className="form-group row">
+                  <div className="col-md-4 offset-md-6 order-last order-md-first">
+                    <input
+                      id="amount"
+                      type="number"
+                      className="form-control text"
+                      onChange={handleAmountChange}
+                      value={dataToSend.amount}
+                      required
+                    ></input>
+                  </div>
+                  <label
+                    htmlFor="amount"
+                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
+                  >
+                    المبلغ
                   </label>
                 </div>
                 <div className="form-group row">
@@ -153,7 +146,7 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
                         type="submit"
                         className="btn btn-success btn-block"
                       >
-                        حفظ القسط
+                        حفظ الوصل
                       </button>
                     ) : (
                       <button disabled className="btn btn-success btn-block">

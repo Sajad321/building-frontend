@@ -6,16 +6,13 @@ import SettingsModal from "./SettingsModal";
 
 function AdminHeader(props) {
   const [addModalShow, setAddModalShow] = useState(false);
-  const [studentsModalShow, setStudentsModalShow] = useState(false);
-  const [settingsModalShow, setSettingsModalShow] = useState(false);
   return (
     <nav className="navbar navbar-dark navbar-expand-md">
       <AddModal
         show={addModalShow}
         onHide={() => setAddModalShow(false)}
-        AddStudentButton={props.AddStudentButton}
-        AddInstituteButton={props.AddInstituteButton}
-        AddInstallmentButton={props.AddInstallmentButton}
+        AddOfficeButton={props.handleAddOfficeButton}
+        AddReceiptButton={props.handleAddReceiptButton}
       />
       {/* <SettingsModal
         show={settingsModalShow}

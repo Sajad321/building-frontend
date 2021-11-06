@@ -25,7 +25,7 @@ export function AddModal(props) {
         <div className="">
           <Button
             onClick={() => {
-              props.AddStudentButton();
+              props.AddOfficeButton();
               props.onHide();
             }}
             className="modal-add-nav"
@@ -36,7 +36,7 @@ export function AddModal(props) {
         <div className="">
           <Button
             onClick={() => {
-              props.AddInstituteButton();
+              props.AddReceiptButton();
               props.onHide();
             }}
             className="modal-add-nav"
