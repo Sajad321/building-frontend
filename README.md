@@ -13,6 +13,7 @@ Electron, React, PostCSS and Webpack app.
 - [Install](#install)
 - [Pre-Usage](#pre-usage)
 - [Usage](#usage)
+- [Endpoints] (#API Endpoints)
 
 ### Install
 
@@ -87,4 +88,74 @@ npm run prod
 
 ```
 yarn prod
+```
+
+### API Endpoints
+
+GET `/main`
+
+```
+offices_number
+total_revenue
+yearly_revenue
+total_expenses
+yearly_expneses
+total_money
+yearly_money
+```
+
+GET `/offices`
+
+```
+id
+name
+date_of_receipt
+date_of_claiming [every month counting]
+amount
+notes
+```
+
+POST `/offices`
+
+```
+name
+data_of_receipt
+amount
+notes
+```
+
+PATCH `/offices`
+
+```
+name
+data_of_receipt
+amount
+notes
+```
+
+GET `/expenses`
+
+```
+id
+expense_number
+expense_type
+amount
+```
+
+POST `/expenses`
+
+- every added expense will get the total money cut
+
+```
+expense_number
+expense_type
+amount
+```
+
+PATCH `/expenses`
+
+```
+expense_number
+expense_type
+amount
 ```

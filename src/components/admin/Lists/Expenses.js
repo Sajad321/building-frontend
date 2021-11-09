@@ -123,7 +123,9 @@ function Expenses({ sideBarShow }) {
             className="d-flex"
           >
             <td className="t-id">{index + 1}</td>
-            <td className="t-name">{expense.name}</td>
+            <td className="">{expense.number}</td>
+            <td className="">{expense.expense_type}</td>
+            <td className="">{expense.amount}</td>
           </tr>
         );
       });
@@ -136,7 +138,9 @@ function Expenses({ sideBarShow }) {
           <thead className="thead-dark">
             <tr className="d-flex">
               <th className="t-id">ت</th>
-              <th className="t-name">الاسم</th>
+              <th className="">رقم الوصل</th>
+              <th className="">نوع الصرف</th>
+              <th className="">المبلغ</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -151,7 +155,9 @@ function Expenses({ sideBarShow }) {
             className="d-flex"
           >
             <td className="t-id">{index + 1}</td>
-            <td className="t-name">{expense.name}</td>
+            <td className="">{expense.number}</td>
+            <td className="">{expense.expense_type}</td>
+            <td className="">{expense.amount}</td>
           </tr>
         );
       });
@@ -164,7 +170,9 @@ function Expenses({ sideBarShow }) {
           <thead className="thead-dark">
             <tr className="d-flex">
               <th className="t-id">ت</th>
-              <th className="t-name">الاسم</th>
+              <th className="">رقم الوصل</th>
+              <th className="">نوع الصرف</th>
+              <th className="">المبلغ</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>

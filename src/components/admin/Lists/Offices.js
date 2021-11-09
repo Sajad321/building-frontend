@@ -5,7 +5,7 @@ import printJS from "print-js";
 const apiUrl = process.env.API_URL;
 var dialog = require("electron").remote.dialog;
 
-function StudentsInstallments({ edit, page, sideBarShow }) {
+function Offices({ edit, page, sideBarShow }) {
   const [data, setData] = useState({ offices: [], searchedOffices: [] });
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
@@ -78,6 +78,10 @@ function StudentsInstallments({ edit, page, sideBarShow }) {
             <tr className="d-flex">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
+              <th className="">تاريخ الاستلام</th>
+              <th className="">تاريخ الاستحقاق</th>
+              <th className="">المبلغ</th>
+              <th className="">الملاحظات</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -102,6 +106,10 @@ function StudentsInstallments({ edit, page, sideBarShow }) {
             <tr className="d-flex">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
+              <th className="">تاريخ الاستلام</th>
+              <th className="">تاريخ الاستحقاق</th>
+              <th className="">المبلغ</th>
+              <th className="">الملاحظات</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -193,4 +201,4 @@ function StudentsInstallments({ edit, page, sideBarShow }) {
   );
 }
 
-export default StudentsInstallments;
+export default Offices;

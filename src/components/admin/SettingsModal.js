@@ -12,7 +12,6 @@ function SettingsModal(props) {
     name: "",
     username: "",
     password: "",
-    auth: "",
   });
   const [settingsPage, setSettingsPage] = useState("UsersPage");
 
@@ -62,7 +61,6 @@ function SettingsModal(props) {
                           name: user.name,
                           username: user.username,
                           password: user.password,
-                          auth: user.auth,
                         });
                         setSettingsPage("AddPage");
                       }}
@@ -98,10 +96,10 @@ function SettingsModal(props) {
             user.id != ""
               ? `user?user_id=${Number(user.id)}&name=${user.name}&username=${
                   user.username
-                }&password=${Number(user.password)}&auth=${Number(user.auth)}`
+                }&password=${Number(user.password)}`
               : `register?name=${user.name}&username=${
                   user.username
-                }&password=${Number(user.password)}&auth=${Number(user.auth)}`
+                }&password=${Number(user.password)}`
           }`,
         {
           method: user.id != "" ? "PATCH" : "POST",
@@ -117,7 +115,6 @@ function SettingsModal(props) {
         name: "",
         username: "",
         password: "",
-        auth: "",
       });
       setSettingsPage("UsersPage");
       setSaving(false);
@@ -204,28 +201,6 @@ function SettingsModal(props) {
                 className="ml-4 col-form-label text-center text-white"
               >
                 كلمة المرور
-              </label>
-            </div>
-            <div className="form-group row">
-              <div className="">
-                <select
-                  id="auth"
-                  onChange={handleAuthChange}
-                  className="form-control text"
-                  dir="rtl"
-                  value={user.auth}
-                  required
-                >
-                  <option selected>اختر</option>
-                  <option value="1">كامل الصلاحيات</option>
-                  <option value="2">مسؤول الحضور</option>
-                </select>
-              </div>
-              <label
-                htmlFor="auth"
-                className="ml-4 col-form-label text-center text-white"
-              >
-                الصلاحية
               </label>
             </div>
             <div className="form-group">

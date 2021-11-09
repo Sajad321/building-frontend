@@ -6,6 +6,7 @@ import SettingsModal from "./SettingsModal";
 
 function AdminHeader(props) {
   const [addModalShow, setAddModalShow] = useState(false);
+  const [settingsModalShow, setSettingsModalShow] = useState(false);
   return (
     <nav className="navbar navbar-dark navbar-expand-md">
       <AddModal
