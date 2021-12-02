@@ -13,7 +13,7 @@ Electron, React, PostCSS and Webpack app.
 - [Install](#install)
 - [Pre-Usage](#pre-usage)
 - [Usage](#usage)
-- [Endpoints] (#API Endpoints)
+- [API-Endpoints] (#API-Endpoints)
 
 ### Install
 
@@ -90,7 +90,7 @@ npm run prod
 yarn prod
 ```
 
-### API Endpoints
+### API-Endpoints
 
 GET `/main`
 
@@ -124,7 +124,7 @@ amount
 notes
 ```
 
-PATCH `/offices`
+PATCH `/offices/<id>`
 
 ```
 name
@@ -152,7 +152,7 @@ expense_type
 amount
 ```
 
-PATCH `/expenses`
+PATCH `/expenses/<id>`
 
 ```
 expense_number

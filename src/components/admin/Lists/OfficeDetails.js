@@ -3,61 +3,120 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import printJS from "print-js";
 const apiUrl = process.env.API_URL;
+var dialog = require("electron").remote.dialog;
 
-// var { ipcRenderer } = require("electron");
-
-function Expenses({ sideBarShow }) {
-  const [data, setData] = useState({ expenses: [], searchedExpenses: [] });
+function OfficeDetails({ edit, page, sideBarShow, office }) {
+  const [data, setData] = useState({ details: [], searchedDetails: [] });
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
-  const [search2, setSearch2] = useState("");
 
   useEffect(() => {}, []);
+
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
   };
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
-  const handleSearch2Change = (e) => {
-    setSearch2(e.target.value);
-  };
-
   const handleSearchButton = (e) => {
     e.preventDefault();
     const reg = new RegExp(search, "i");
-    if (searchType == "1") {
-      setSearchedData({
-        students: [...data.students].filter((d) => d.name.match(reg)),
-        attendance: [...data.attendance],
-      });
-    } else if (searchType == "2") {
-      setSearchedData({
-        attendance: [...data.attendance].filter(
-          (d) => d.date <= search2 && d.date >= search
-        ),
-        students: [...data.students],
-      });
-    }
   };
 
   // const handleEditButton = (student) => {
   //   edit(student);
   // };
 
+  // function PrintElem(elem) {
+  //   var mywindow = window.open("", "PRINT", "height=400,width=600");
+
+  //   mywindow.document.write(
+  //     "<html><head><title>" + document.title + "</title>"
+  //   );
+  //   mywindow.document.write("</head><body >");
+  //   mywindow.document.write("<h1>" + document.title + "</h1>");
+  //   mywindow.document.write(document.getElementById(elem).innerHTML);
+  //   mywindow.document.write("</body></html>");
+
+  //   mywindow.document.close(); // necessary for IE >= 10
+  //   mywindow.focus(); // necessary for IE >= 10*/
+
+  //   mywindow.print();
+  //   mywindow.close();
+
+  //   return true;
+  // }
   const printTable = () => {
     // let divToPrint = document.getElementById("print-table");
-    // newWin = window.open("");
-    // newWin.document.write(divToPrint.outerHTML);
-    // newWin.print();
-    // newWin.close();
+    // PrintElem(divToPrint);
+    // printJS({ printable: "print-table", type: "html", targetStyles: ["*"] });
+    // window.print();
+
     printJS({
       printable: "print-table",
       type: "html",
     });
-    // window.print();
   };
 
+  const render_table = () => {
+    if (searchType != "0") {
+      const render_data = data.searchedDetails.map((office, index) => {
+        return (
+          <tr key={office.id} className="d-flex font-weight-bold text-white">
+            <td className="t-id">{index + 1}</td>
+            <td className="t-name">{office.name}</td>
+          </tr>
+        );
+      });
+      return (
+        <table
+          className="table table-dark table-striped table-bordered table-hover text"
+          dir="rtl"
+          border="1"
+        >
+          <thead className="thead-dark">
+            <tr className="d-flex">
+              <th className="t-id">ت</th>
+              <th className="t-name">الاسم</th>
+              <th className="">تاريخ الاستلام</th>
+              <th className="">تاريخ الاستحقاق</th>
+              <th className="">المبلغ</th>
+              <th className="">الملاحظات</th>
+            </tr>
+          </thead>
+          <tbody>{render_data}</tbody>
+        </table>
+      );
+    } else if (searchType == "0") {
+      const render_data = data.details.map((office, index) => {
+        return (
+          <tr key={office.id} className="d-flex font-weight-bold text-white">
+            <td className="t-id">{index + 1}</td>
+            <td className="t-name">{office.name}</td>
+          </tr>
+        );
+      });
+      return (
+        <table
+          className="table table-dark table-striped table-bordered table-hover text"
+          dir="rtl"
+          border="1"
+        >
+          <thead className="thead-dark">
+            <tr className="d-flex">
+              <th className="t-id">ت</th>
+              <th className="t-name">الاسم</th>
+              <th className="">تاريخ الاستلام</th>
+              <th className="">تاريخ الاستحقاق</th>
+              <th className="">المبلغ</th>
+              <th className="">الملاحظات</th>
+            </tr>
+          </thead>
+          <tbody>{render_data}</tbody>
+        </table>
+      );
+    }
+  };
   const searchBar = () => {
     if (searchType == "0") {
       return (
@@ -71,120 +130,14 @@ function Expenses({ sideBarShow }) {
           <input
             type="text"
             className="form-control text"
-            id="searchStudent"
+            id="searchName"
             onChange={handleSearchChange}
             placeholder="ابحث"
           ></input>
         </div>
       );
-    } else if (searchType == "2") {
-      return (
-        <Fragment>
-          <div className="col-5 offset-2 col-md-3 offset-md-0 order-0 order-md-2">
-            <input
-              type="date"
-              className="form-control text"
-              id="searchDate"
-              onChange={handleSearchChange}
-            ></input>
-          </div>
-          <p
-            className="col-2 col-md-1 order-1 order-md-3 text-white"
-            style={{ fontSize: "20px" }}
-          >
-            من
-          </p>
-          <div className="col-5 offset-5 col-md-3 offset-md-0 order-2 order-md-0">
-            <input
-              type="date"
-              className="form-control text"
-              id="searchDate"
-              onChange={handleSearch2Change}
-            ></input>
-          </div>
-          <p
-            className="col-2 col-md-1 order-3 order-md-1 text-white"
-            style={{ fontSize: "20px" }}
-          >
-            الى
-          </p>
-        </Fragment>
-      );
     }
   };
-
-  const render_table = () => {
-    if (searchType != "0") {
-      const render_data = data.searchedExpenses.map((expense, index) => {
-        return (
-          <tr
-            key={expense.id}
-            className="font-weight-bold text-white"
-            className="d-flex"
-          >
-            <td className="t-id">{index + 1}</td>
-            <td className="t-name">{expense.name}</td>
-            <td className="">{expense.number}</td>
-            <td className="">{expense.expense_type}</td>
-            <td className="">{expense.amount}</td>
-          </tr>
-        );
-      });
-      return (
-        <table
-          className="table table-dark table-striped table-bordered table-hover text"
-          dir="rtl"
-          border="1"
-        >
-          <thead className="thead-dark">
-            <tr className="d-flex">
-              <th className="t-id">ت</th>
-              <th className="t-name">الاسم</th>
-              <th className="">رقم الوصل</th>
-              <th className="">نوع الصرف</th>
-              <th className="">المبلغ</th>
-            </tr>
-          </thead>
-          <tbody>{render_data}</tbody>
-        </table>
-      );
-    } else if (searchType == "0") {
-      const render_data = data.expenses.map((expense, index) => {
-        return (
-          <tr
-            key={expense.id}
-            className="font-weight-bold text-white"
-            className="d-flex"
-          >
-            <td className="t-id">{index + 1}</td>
-            <td className="t-name">{expense.name}</td>
-            <td className="">{expense.number}</td>
-            <td className="">{expense.expense_type}</td>
-            <td className="">{expense.amount}</td>
-          </tr>
-        );
-      });
-      return (
-        <table
-          className="table table-dark table-striped table-bordered table-hover text"
-          dir="rtl"
-          border="1"
-        >
-          <thead className="thead-dark">
-            <tr className="d-flex">
-              <th className="t-id">ت</th>
-              <th className="t-name">الاسم</th>
-              <th className="">رقم الوصل</th>
-              <th className="">نوع الصرف</th>
-              <th className="">المبلغ</th>
-            </tr>
-          </thead>
-          <tbody>{render_data}</tbody>
-        </table>
-      );
-    }
-  };
-
   return (
     <section className="main">
       <div className="row pt-5 m-0">
@@ -200,12 +153,13 @@ function Expenses({ sideBarShow }) {
             <div className="col-12">
               <div className="row mt-3">
                 <div className="col-8">
-                  <form onSubmit={handleSearchButton}>
+                  <form>
                     <div className="form-group row mt-1">
                       <div className="col-2 text">
                         <button
                           type="submit"
                           className="btn btn-secondary btn-sm mt-1"
+                          onClick={handleSearchButton}
                         >
                           ابحث
                         </button>
@@ -221,7 +175,6 @@ function Expenses({ sideBarShow }) {
                             الكل
                           </option>
                           <option value="1">الاسم</option>
-                          <option value="2">التاريخ</option>
                         </select>
                       </div>
                       {searchBar()}
@@ -234,7 +187,7 @@ function Expenses({ sideBarShow }) {
                   </button>
                 </div>
                 <div className="col-3">
-                  <h2 className="text text-white">الصرفيات</h2>
+                  <h2 className="text text-white">المكتب رقم {office}</h2>
                 </div>
               </div>
             </div>
@@ -248,4 +201,4 @@ function Expenses({ sideBarShow }) {
   );
 }
 
-export default Expenses;
+export default OfficeDetails;

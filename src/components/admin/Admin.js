@@ -3,6 +3,7 @@ import AdminHeader from "./AdminHeader";
 import AdminFooter from "./AdminFooter";
 import MainAdmin from "./MainAdmin";
 import Offices from "./Lists/Offices";
+import OfficeDetails from "./Lists/OfficeDetails";
 import Expenses from "./Lists/Expenses";
 import AddOffice from "./Forms/AddOffice";
 import AddReceipt from "./Forms/AddReceipt";
@@ -10,6 +11,7 @@ const apiUrl = process.env.API_URL;
 
 function Admin(props) {
   const [page, setPage] = useState("Main");
+  const [office, setOffice] = useState(0);
 
   const [sideBarShow, setSideBarShow] = useState(true);
 
@@ -65,12 +67,16 @@ function Admin(props) {
   const handleMainButton = () => {
     setPage("Main");
     setDataToChange({});
-    getInstallments();
-    getAttendance();
   };
 
   const handleOfficesButton = () => {
     setPage("Offices");
+    setDataToChange({});
+  };
+
+  const handleOfficeDetails = (office) => {
+    setOffice(office);
+    setPage("OfficeDetails");
     setDataToChange({});
   };
 
@@ -89,14 +95,14 @@ function Admin(props) {
     setDataToChange({});
   };
 
-  const handleEditStudentButton = (student) => {
-    setDataToChange(student);
-    setPage("AddStudent");
+  const handleEditOfficeButton = (office) => {
+    setDataToChange(office);
+    setPage("AddOffice");
   };
 
-  const handleEditInstallmentButton = (installment) => {
-    setDataToChange(installment);
-    setPage("AddInstallment");
+  const handleEditReceiptButton = (receipt) => {
+    setDataToChange(receipt);
+    setPage("AddReceipt");
   };
 
   if (page == "Main") {
@@ -117,9 +123,25 @@ function Admin(props) {
         {/* End of Navbar */}
         {/* Offices */}
         <Offices
-          edit={handleEditInstallmentButton}
+          handleOfficeDetails={handleOfficeDetails}
+          edit={handleEditOfficeButton}
           page={handleMainButton}
           sideBarShow={sideBarShow}
+        />
+        <AdminFooter sideBarShow={sideBarShow} />
+      </Fragment>
+    );
+  } else if (page == "OfficeDetails") {
+    return (
+      <Fragment>
+        {AdminHeaderFunction({ Students: "active" })}
+        {/* End of Navbar */}
+        {/* Offices */}
+        <OfficeDetails
+          edit={handleEditOfficeButton}
+          page={handleMainButton}
+          sideBarShow={sideBarShow}
+          office={office}
         />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
@@ -130,7 +152,7 @@ function Admin(props) {
         {AdminHeaderFunction({ Students: "active" })}
         {/* End of Navbar */}
         {/* Expenses */}
-        <Expenses sideBarShow={sideBarShow} />
+        <Expenses edit={handleEditReceiptButton} sideBarShow={sideBarShow} />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
     );

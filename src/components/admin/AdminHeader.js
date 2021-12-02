@@ -107,7 +107,7 @@ function AdminHeader(props) {
                   >
                     {" "}
                     <FontAwesomeIcon
-                      icon="school"
+                      icon="file-invoice-dollar"
                       className={"nav_logo-icon " + props.Active.Institutes}
                       color="white"
                       size="2x"
