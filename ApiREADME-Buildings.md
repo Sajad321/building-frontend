@@ -4,6 +4,13 @@ GET `/main-admin`
 - Request Arguments: None
 - Returns: number of total offices, total expenses, yearly expenses, total income, yearly income, total amount, yearly amount.
 
+- For Total Amount: You need to count the amount from the income amount of office_details.
+- For Yearly Amount: You need to count the amount from the income amount of office_details based on the date_of_receipt.
+- For Total Expenses: You need to cut the expenses amount from the total amount.
+- For Yearly Expenses: You need to cut the expenses amount from the total amount based on the date of the expense.
+- For Total Income: You need to count the income amount from the income amount of office_details without the the total expenses amount.
+- For Yearly Income: You need to count the income amount from the income amount of office_details without the the total expenses amount based on the dates of the expenses and office_details date_of_receipt.
+
 Example Response `{ 
     "offices_number": 10,
     "total_expenses": 4325,
@@ -68,7 +75,7 @@ Example Response `{
 
 POST `/offices/<office_id>`
 
-- Add office details to the database, and on each addition there will be an increment in the total amount and the total income.
+- Add office details to the database.
 - Request Body: renter, date of receipt, date of claiming, amount and notes.
 - Returns: renter of office.
 
@@ -106,7 +113,7 @@ Example Response `{
 
 POST `/expenses`
 
-- Add an expense to the database, on each added expense there will be cut from the total amount and increment to the total expense.
+- Add an expense to the database.
 - Request Body: renter, date of receipt, date of claiming, amount and notes.
 - Returns: renter of office.
 
@@ -119,5 +126,33 @@ Example Request Payload `{
 
 Example Response `{
     "voucher_number": 12,
+    "success": true
+}`
+
+GET `/notifications`
+
+- Get notifications about date of claiming from the database.
+- Request Arguments: None
+- Returns: id, date_of_claiming and seen.
+
+Example Response `{
+    "notifications": [
+        {
+            "id": 1,
+            "date_of_claiming": "1",
+            "seen": 0
+        }
+    ],
+    "success": true
+}`
+
+
+PATCH `/notifications/<notification_id>`
+
+- Change the notification seen state to 1 in the database.
+- Request Arguments: notification_id
+- Returns: None.
+
+Example Response `{
     "success": true
 }`

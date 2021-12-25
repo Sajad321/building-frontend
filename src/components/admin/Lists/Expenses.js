@@ -12,7 +12,28 @@ function Expenses({ sideBarShow }) {
   const [search, setSearch] = useState("");
   const [search2, setSearch2] = useState("");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const getExpenses = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/expenses`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer`,
+          },
+        });
+
+        const responseData = await response.json();
+        setData({
+          ...data,
+          expenses: responseData.expenses,
+          searchedExpenses: responseData.expenses,
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    getExpenses();
+  }, []);
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
   };
@@ -120,13 +141,14 @@ function Expenses({ sideBarShow }) {
           <tr
             key={expense.id}
             className="font-weight-bold text-white"
-            className="d-flex"
+            className=""
           >
             <td className="t-id">{index + 1}</td>
             <td className="t-name">{expense.name}</td>
-            <td className="">{expense.number}</td>
-            <td className="">{expense.expense_type}</td>
+            <td className="">{expense.voucher_number}</td>
+            <td className="">{expense.type}</td>
             <td className="">{expense.amount}</td>
+            <td className="">{expense.date}</td>
           </tr>
         );
       });
@@ -137,12 +159,13 @@ function Expenses({ sideBarShow }) {
           border="1"
         >
           <thead className="thead-dark">
-            <tr className="d-flex">
+            <tr className="">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
               <th className="">رقم الوصل</th>
               <th className="">نوع الصرف</th>
               <th className="">المبلغ</th>
+              <th className="">التاريخ</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -154,13 +177,14 @@ function Expenses({ sideBarShow }) {
           <tr
             key={expense.id}
             className="font-weight-bold text-white"
-            className="d-flex"
+            className=""
           >
             <td className="t-id">{index + 1}</td>
             <td className="t-name">{expense.name}</td>
-            <td className="">{expense.number}</td>
-            <td className="">{expense.expense_type}</td>
+            <td className="">{expense.voucher_number}</td>
+            <td className="">{expense.type}</td>
             <td className="">{expense.amount}</td>
+            <td className="">{expense.date}</td>
           </tr>
         );
       });
@@ -171,12 +195,13 @@ function Expenses({ sideBarShow }) {
           border="1"
         >
           <thead className="thead-dark">
-            <tr className="d-flex">
+            <tr className="">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
               <th className="">رقم الوصل</th>
               <th className="">نوع الصرف</th>
               <th className="">المبلغ</th>
+              <th className="">التاريخ</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>

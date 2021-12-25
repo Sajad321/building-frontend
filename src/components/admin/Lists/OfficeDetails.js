@@ -5,12 +5,33 @@ import printJS from "print-js";
 const apiUrl = process.env.API_URL;
 var dialog = require("electron").remote.dialog;
 
-function OfficeDetails({ edit, page, sideBarShow, office }) {
+function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
   const [data, setData] = useState({ details: [], searchedDetails: [] });
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const getOfficeDetails = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/offices/${office.id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer`,
+          },
+        });
+
+        const responseData = await response.json();
+        setData({
+          ...data,
+          details: responseData.office_details,
+          searchedDetails: responseData.office_details,
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    getOfficeDetails();
+  }, []);
 
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
@@ -60,11 +81,15 @@ function OfficeDetails({ edit, page, sideBarShow, office }) {
 
   const render_table = () => {
     if (searchType != "0") {
-      const render_data = data.searchedDetails.map((office, index) => {
+      const render_data = data.searchedDetails.map((detail, index) => {
         return (
-          <tr key={office.id} className="d-flex font-weight-bold text-white">
+          <tr key={office.id} className="font-weight-bold text-white">
             <td className="t-id">{index + 1}</td>
-            <td className="t-name">{office.name}</td>
+            <td className="t-name">{detail.renter}</td>
+            <td className="">{detail.date_of_receipt}</td>
+            <td className="">{detail.date_of_claiming}</td>
+            <td className="">{detail.amount}</td>
+            <td className="">{detail.notes}</td>
           </tr>
         );
       });
@@ -75,7 +100,7 @@ function OfficeDetails({ edit, page, sideBarShow, office }) {
           border="1"
         >
           <thead className="thead-dark">
-            <tr className="d-flex">
+            <tr className="">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
               <th className="">تاريخ الاستلام</th>
@@ -88,11 +113,15 @@ function OfficeDetails({ edit, page, sideBarShow, office }) {
         </table>
       );
     } else if (searchType == "0") {
-      const render_data = data.details.map((office, index) => {
+      const render_data = data.details.map((detail, index) => {
         return (
-          <tr key={office.id} className="d-flex font-weight-bold text-white">
+          <tr key={detail.id} className="font-weight-bold text-white">
             <td className="t-id">{index + 1}</td>
-            <td className="t-name">{office.name}</td>
+            <td className="t-name">{detail.renter}</td>
+            <td className="">{detail.date_of_receipt}</td>
+            <td className="">{detail.date_of_claiming}</td>
+            <td className="">{detail.amount}</td>
+            <td className="">{detail.notes}</td>
           </tr>
         );
       });
@@ -103,7 +132,7 @@ function OfficeDetails({ edit, page, sideBarShow, office }) {
           border="1"
         >
           <thead className="thead-dark">
-            <tr className="d-flex">
+            <tr className="">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
               <th className="">تاريخ الاستلام</th>
@@ -152,7 +181,7 @@ function OfficeDetails({ edit, page, sideBarShow, office }) {
           <div className="row pt-md-3 pr-2 pl-2 mt-md-3 mb-5">
             <div className="col-12">
               <div className="row mt-3">
-                <div className="col-8">
+                <div className="col-7">
                   <form>
                     <div className="form-group row mt-1">
                       <div className="col-2 text">
@@ -186,8 +215,13 @@ function OfficeDetails({ edit, page, sideBarShow, office }) {
                     طباعة
                   </button>
                 </div>
+                <div className="col-1 pt-1">
+                  <button onClick={addDetails} className="btn btn-light">
+                    اضافة
+                  </button>
+                </div>
                 <div className="col-3">
-                  <h2 className="text text-white">المكتب رقم {office}</h2>
+                  <h2 className="text text-white">المكتب رقم {office.name}</h2>
                 </div>
               </div>
             </div>

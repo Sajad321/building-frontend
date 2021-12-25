@@ -14,21 +14,6 @@ const apiUrl = process.env.API_URL;
 
 function App() {
   const { token, setToken } = useToken();
-  const callSecureApi = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/users`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer`,
-        },
-        body: JSON.stringify(user),
-      });
-
-      const responseData = await response.json();
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
   return (
     <Fragment>
       <Switch>

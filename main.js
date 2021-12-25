@@ -112,7 +112,7 @@ function createWindow() {
 
   // Don't show until we are ready and loaded
   mainWindow.once("ready-to-show", () => {
-    // loginWindow.show();
+    loginWindow.show();
 
     // const template = [
     //   {
@@ -139,75 +139,20 @@ function createWindow() {
       );
       // mainWindow.webContents.openDevTools();
     }
-    // ipcMain.on("show-student-info", (event, args) => {
-    //   if (studentInfoWindow != null) {
-    //     studentInfoWindow.close();
-    //     studentInfoWindow = null;
-    //   }
-    //   studentInfoWindow = new BrowserWindow({
-    //     minWidth: 600,
-    //     minHeight: 600,
-    //     show: false,
-    //     frame: false,
-    //     webPreferences: {
-    //       nodeIntegration: true,
-    //       contextIsolation: false,
-    //     },
-    //     autoHideMenuBar: true,
-    //   });
-    //   console.log(args[0]);
-    //   studentInfoPath = () => {
-    //     if (dev && process.argv.indexOf("--noDevServer") === -1) {
-    //       return url.format({
-    //         protocol: "http:",
-    //         host: "localhost:8080",
-    //         pathname: "index.html",
-    //         hash: `#sai/${args[0]}`,
-    //         slashes: true,
-    //       });
-    //     } else {
-    //       return url.format({
-    //         protocol: "file:",
-    //         pathname: path.join(__dirname, "dist", "index.html"),
-    //         hash: `#sai/${args[0]}`,
-    //         slashes: true,
-    //       });
-    //     }
-    //   };
-    //   studentInfoWindow.loadURL(studentInfoPath());
-
-    //   studentInfoWindow.show();
-    // });
-    // ipcMain.on("abort-student-attendance", () => {
-    //   studentInfoWindow.hide();
-    //   mainWindow.focus();
-    //   mainWindow.webContents.send("aborted");
-    // });
-    // ipcMain.on("accept-student-attendance", (event, args) => {
-    //   studentInfoWindow.hide();
-    //   mainWindow.focus();
-    //   console.log(args);
-    //   event.sender.send("accepted", [args[0]]);
-    //   // event.reply("accepted", [args[0]]);
-    //   // messages.student_attendance_id = args[0];
-    //   // messages.accepted = true;
-    // });
-    mainWindow.show();
-    mainWindow.maximize();
-    // ipcMain.on("login", () => {
-    //   mainWindow.hide();
-    //   loginWindow.show();
-    //   loginWindow.focus();
-    // });
-    // ipcMain.on("finished-login", () => {
-    //   loginWindow.hide();
-    //   mainWindow.reload();
-    //   mainWindow.webContents.once("did-finish-load", () => {
-    //     mainWindow.show();
-    //     mainWindow.maximize();
-    //     mainWindow.focus();
-    //   });
-    // });
+    ipcMain.on("login", () => {
+      mainWindow.hide();
+      loginWindow.show();
+      loginWindow.focus();
+    });
+    ipcMain.on("finished-login", () => {
+      loginWindow.hide();
+      mainWindow.reload();
+      mainWindow.webContents.once("did-finish-load", () => {
+        mainWindow.show();
+        mainWindow.maximize();
+        mainWindow.focus();
+      });
+    });
   });
   // Emitted when the window is closed.
   mainWindow.on("closed", function () {
@@ -215,7 +160,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
-    studentInfoWindow = null;
+    loginWindow = null;
     // exec("taskkill /f /t /im main.exe", (err, stdout, stderr) => {
     //   if (err) {
     //     console.log(err);
@@ -231,7 +176,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
-    studentInfoWindow = null;
+    loginWindow = null;
     // exec("taskkill /f /t /im main.exe", (err, stdout, stderr) => {
     //   if (err) {
     //     console.log(err);

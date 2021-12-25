@@ -4,9 +4,13 @@ const apiUrl = process.env.API_URL;
 
 function MainAdmin({ sideBarShow }) {
   const [data, setData] = useState({
-    students_count: "",
-    institutes_count: "",
-    institutes: [],
+    offices_number: "",
+    total_expenses: "",
+    yearly_expenses: "",
+    total_income: "",
+    yearly_income: "",
+    total_amount: "",
+    yearly_amount: "",
   });
   useEffect(() => {
     const getMain = async () => {
@@ -42,10 +46,14 @@ function MainAdmin({ sideBarShow }) {
               <div className="card card-common">
                 <div className="card-body" dir="ltr">
                   <div className="d-flex justify-content-between">
-                    <FontAwesomeIcon icon="users" color="white" size="3x" />
+                    <FontAwesomeIcon
+                      icon="house-user"
+                      color="white"
+                      size="3x"
+                    />
                     <div className="text-right text-white">
-                      <h5>الصرفيات</h5>
-                      <h3>{data.students_count}</h3>
+                      <h5>عدد المكاتب</h5>
+                      <h3>{data.offices_number}</h3>
                     </div>
                   </div>
                 </div>
@@ -65,8 +73,8 @@ function MainAdmin({ sideBarShow }) {
                       size="3x"
                     />
                     <div className="text-right text-white">
-                      <h5>عدد المكاتب</h5>
-                      <h3>{data.institutes_count}</h3>
+                      <h5>المبلغ الكلي</h5>
+                      <h3>{data.total_amount}</h3>
                     </div>
                   </div>
                 </div>
@@ -76,56 +84,107 @@ function MainAdmin({ sideBarShow }) {
                 </div>
               </div>
             </div>
-            {data.institutes.map((institute) => {
-              return (
-                <div key={institute.id} className="col-12">
-                  <div className="row">
-                    <div className="col-sm-6 p-2">
-                      <div className="card card-common">
-                        <div className="card-body" dir="ltr">
-                          <div className="d-flex justify-content-between">
-                            <FontAwesomeIcon
-                              icon="user"
-                              color="white"
-                              size="3x"
-                            />
-                            <div className="text-right text-white">
-                              <h5>عدد طلاب معهد {institute.name}</h5>
-                              <h3>{institute.students_institute_count}</h3>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="card-footer text-white">
-                          <i className="fas fa-sync mr-3"></i>
-                          <span>تم التحديث الان</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-6 p-2">
-                      <div className="card card-common">
-                        <div className="card-body" dir="ltr">
-                          <div className="d-flex justify-content-between">
-                            <FontAwesomeIcon
-                              icon="chart-line"
-                              color="white"
-                              size="3x"
-                            />
-                            <div className="text-right text-white">
-                              <h5>الحضور الاخير لمعهد {institute.name}</h5>
-                              <h3>{institute.daily_attendance}</h3>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="card-footer text-white">
-                          <i className="fas fa-sync mr-3"></i>
-                          <span>تم التحديث الان</span>
-                        </div>
-                      </div>
+            <div className="col-sm-6 p-2">
+              <div className="card card-common">
+                <div className="card-body" dir="ltr">
+                  <div className="d-flex justify-content-between">
+                    <FontAwesomeIcon
+                      icon="house-user"
+                      color="white"
+                      size="3x"
+                    />
+                    <div className="text-right text-white">
+                      <h5>المبلغ السنوي</h5>
+                      <h3>{data.yearly_amount}</h3>
                     </div>
                   </div>
                 </div>
-              );
-            })}
+                <div className="card-footer text-white">
+                  <i className="fas fa-sync mr-3"></i>
+                  <span>تم التحديث الان</span>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6 p-2">
+              <div className="card card-common">
+                <div className="card-body" dir="ltr">
+                  <div className="d-flex justify-content-between">
+                    <FontAwesomeIcon icon="users" color="white" size="3x" />
+                    <div className="text-right text-white">
+                      <h5>الصرفيات الكلي</h5>
+                      <h3>{data.total_expenses}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-footer text-white">
+                  <i className="fas fa-sync mr-3"></i>
+                  <span>تم التحديث الان</span>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6 p-2">
+              <div className="card card-common">
+                <div className="card-body" dir="ltr">
+                  <div className="d-flex justify-content-between">
+                    <FontAwesomeIcon
+                      icon="house-user"
+                      color="white"
+                      size="3x"
+                    />
+                    <div className="text-right text-white">
+                      <h5>الصرفيات السنوي</h5>
+                      <h3>{data.yearly_expenses}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-footer text-white">
+                  <i className="fas fa-sync mr-3"></i>
+                  <span>تم التحديث الان</span>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6 p-2">
+              <div className="card card-common">
+                <div className="card-body" dir="ltr">
+                  <div className="d-flex justify-content-between">
+                    <FontAwesomeIcon
+                      icon="house-user"
+                      color="white"
+                      size="3x"
+                    />
+                    <div className="text-right text-white">
+                      <h5>الربح الكلي</h5>
+                      <h3>{data.total_income}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-footer text-white">
+                  <i className="fas fa-sync mr-3"></i>
+                  <span>تم التحديث الان</span>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6 p-2">
+              <div className="card card-common">
+                <div className="card-body" dir="ltr">
+                  <div className="d-flex justify-content-between">
+                    <FontAwesomeIcon
+                      icon="house-user"
+                      color="white"
+                      size="3x"
+                    />
+                    <div className="text-right text-white">
+                      <h5>الربح السنوي</h5>
+                      <h3>{data.yearly_income}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-footer text-white">
+                  <i className="fas fa-sync mr-3"></i>
+                  <span>تم التحديث الان</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

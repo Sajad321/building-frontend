@@ -1,71 +1,62 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { toast } from "react-toastify";
 const apiUrl = process.env.API_URL;
 
-function AddInstitute({ page, dataToChange, sideBarShow }) {
+function AddOfficeDetails({ page, dataToChange, office, sideBarShow }) {
   const [dataToSend, setDataToSend] = useState({
     id: "",
-    voucher_number: "",
-    name: "",
-    expense_type: "",
-    amount: "",
-    date: "",
+    renter: "",
+    date_of_receipt: "",
+    date_of_claiming: "",
+    amount: 0,
+    notes: "",
   });
-  const [institutes, setInstitutes] = useState([]);
+  const [saving, setSaving] = useState(false);
   useEffect(() => {
-    const getStuff = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/institute`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer`,
-          },
-        });
-
-        const responseData = await response.json();
-        setInstitutes(responseData.institutes);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    getStuff();
-    if (Object.keys(dataToChange).length) {
+    if (Object.keys(dataToChange).length != 0) {
       setDataToSend(dataToChange);
     }
+    // console.log(document.getElementById("myimage").src);
   }, []);
-  const handleVoucherNumberChange = (e) =>
-    setDataToSend({ ...dataToSend, voucher_number: e.target.value });
-  const handleNameChange = (e) =>
-    setDataToSend({ ...dataToSend, name: e.target.value });
-  const handleExpenseTypeChange = (e) =>
-    setDataToSend({ ...dataToSend, expense_type: e.target.value });
-  const handleAmountChange = (e) =>
+  const handleRenterChange = (e) =>
+    setDataToSend({ ...dataToSend, renter: e.target.value });
+  const handleAmountChange = (e) => {
     setDataToSend({ ...dataToSend, amount: Number(e.target.value) });
-  const handleDateChange = (e) =>
-    setDataToSend({ ...dataToSend, date: e.target.value });
-  const [saving, setSaving] = useState(false);
-  const saveReceipt = async () => {
+  };
+  const handleDateOfReceiptChange = (e) =>
+    setDataToSend({ ...dataToSend, date_of_receipt: e.target.value });
+  const handleDateOfClaimingChange = (e) =>
+    setDataToSend({ ...dataToSend, date_of_claiming: e.target.value });
+  const handleNotesChange = (e) =>
+    setDataToSend({ ...dataToSend, notes: e.target.value });
+
+  const saveOfficeDetails = async () => {
     try {
       setSaving(true);
       const response = await fetch(
-        `${apiUrl}/expenses` +
+        `${apiUrl}/offices/${office.id}` +
           `${
             dataToSend.id != ""
-              ? "/" + dataToSend.id
-              : `?&name=${dataToSend.name}&voucher_number=${dataToSend.voucher_number}&expense_type=${dataToSend.expense_type}&amount=${dataToSend.amount}&date=${dataToSend.date}`
+              ? `?id=${dataToSend.id}&name=${dataToSend.name}&amount=${dataToSend.amount}&date_of_receipt=${dataToSend.date_of_receipt}&date_of_claiming=${dataToSend.date_of_claiming}&notes=${dataToSend.notes}`
+              : `?renter=${dataToSend.renter}&amount=${dataToSend.amount}&date_of_receipt=${dataToSend.date_of_receipt}&date_of_claiming=${dataToSend.date_of_claiming}&notes=${dataToSend.notes}`
           }`,
         {
           method: dataToSend.id != "" ? "PATCH" : "POST",
-          headers: {
-            Authorization: `Bearer`,
-          },
-          // body: JSON.stringify(dataToSend),
+          // headers: {
+          //   "Content-Type": "multipart/form-data",
+          // },
+
+          // JSON.stringify({
+          //   ...dataToSend,
+          //   institute_id: Number(dataToSend.institute_id),
+          //   phone: Number(dataToSend.phone),
+          // }),
         }
       );
 
       const responseData = await response.json();
 
-      toast.success("تم حفظ الوصل");
+      toast.success("تم حفظ المكتب");
       page();
     } catch (error) {
       console.log(error.message);
@@ -75,7 +66,7 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveReceipt();
+    saveOfficeDetails();
   };
   return (
     <section className="main">
@@ -89,64 +80,66 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
           id="main-view"
         >
           <div className="row pt-md-3 pr-2 pl-2 mt-md-3 mb-5">
-            <div className="col-sm-12 p-2">
+            <div className="col-7 p-2 offset-5">
               <form onSubmit={handleSubmit}>
                 <div className="form-group row">
-                  <div className="col-md-4 offset-md-6 order-last order-md-first">
+                  <div className="col-7 offset-1 order-last order-md-first">
                     <input
-                      type="number"
-                      className="form-control text"
-                      onChange={handleVoucherNumberChange}
-                      value={dataToSend.voucher_number}
-                      required
-                    ></input>
-                  </div>
-                  <label
-                    htmlFor="name"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    رقم الوصل
-                  </label>
-                </div>
-                <div className="form-group row">
-                  <div className="col-md-4 offset-md-6 order-last order-md-first">
-                    <input
-                      type="text"
                       id="name"
+                      type="text"
                       placeholder="الاسم"
                       className="form-control text"
-                      onChange={handleNameChange}
-                      value={dataToSend.name}
+                      onChange={handleRenterChange}
+                      value={dataToSend.renter}
                       required
                     ></input>
                   </div>
                   <label
                     htmlFor="name"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
+                    className="col-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    الاسم
+                    اسم المؤجر
                   </label>
                 </div>
                 <div className="form-group row">
-                  <div className="col-md-4 offset-md-6 order-last order-md-first">
+                  <div className="col-7 offset-1 order-last order-md-first">
                     <input
-                      type="text"
-                      placeholder="نوع الصرف"
+                      id="date_of_receipt"
+                      type="date"
                       className="form-control text"
-                      onChange={handleExpenseTypeChange}
-                      value={dataToSend.expense_type}
+                      onChange={handleDateOfReceiptChange}
+                      value={dataToSend.date_of_receipt}
                       required
                     ></input>
                   </div>
                   <label
-                    htmlFor="expense_type"
+                    htmlFor="date_of_receipt"
                     className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    نوع الصرف
+                    تاريخ الاستلام
+                  </label>
+                </div>
+
+                <div className="form-group row">
+                  <div className="col-7 offset-1 order-last order-md-first">
+                    <input
+                      id="date_of_claiming"
+                      type="date"
+                      className="form-control text"
+                      onChange={handleDateOfClaimingChange}
+                      value={dataToSend.date_of_claiming}
+                      required
+                    ></input>
+                  </div>
+                  <label
+                    htmlFor="date_of_claiming"
+                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
+                  >
+                    تاريخ الاستحقاق
                   </label>
                 </div>
                 <div className="form-group row">
-                  <div className="col-md-4 offset-md-6 order-last order-md-first">
+                  <div className="col-7 offset-1 order-last order-md-first">
                     <input
                       id="amount"
                       type="number"
@@ -164,31 +157,33 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
                   </label>
                 </div>
                 <div className="form-group row">
-                  <div className="col-md-4 offset-md-6 order-last order-md-first">
+                  <div className="col-7 offset-1 order-last order-md-first">
                     <input
-                      id="date"
-                      type="date"
+                      id="note"
+                      type="text"
+                      onChange={handleNotesChange}
+                      placeholder="الملاحظات"
                       className="form-control text"
-                      onChange={handleDateChange}
-                      value={dataToSend.date}
-                      required
+                      value={dataToSend.notes}
+                      // required
                     ></input>
                   </div>
                   <label
-                    htmlFor="date"
+                    htmlFor="note"
                     className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
                   >
-                    التاريخ
+                    الملاحظات
                   </label>
                 </div>
+
                 <div className="form-group row">
-                  <div className="col-10 offset-1 col-sm-3 offset-sm-6 mt-3">
+                  <div className="col-3 offset-2 mt-3">
                     {!saving ? (
                       <button
                         type="submit"
                         className="btn btn-success btn-block"
                       >
-                        حفظ الوصل
+                        حفظ المكتب
                       </button>
                     ) : (
                       <button disabled className="btn btn-success btn-block">
@@ -206,4 +201,4 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
   );
 }
 
-export default AddInstitute;
+export default AddOfficeDetails;

@@ -5,9 +5,27 @@ import printJS from "print-js";
 const apiUrl = process.env.API_URL;
 var dialog = require("electron").remote.dialog;
 
-function Offices({ edit, page, sideBarShow, handleOfficeDetails }) {
-  const [offices, setOffices] = useState([{ id: 0, name: "1" }]);
+function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
+  const [offices, setOffices] = useState([]);
 
+  useEffect(() => {
+    const getOffices = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/offices`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer`,
+          },
+        });
+
+        const responseData = await response.json();
+        setOffices(responseData.offices);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    getOffices();
+  }, []);
   return (
     <section className="main">
       <div className="row pt-5 m-0">
@@ -34,7 +52,8 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails }) {
                   <div
                     className="card card-common card-height"
                     onClick={() => {
-                      handleOfficeDetails(office.id);
+                      handleOfficeDetails();
+                      setOffice(office);
                     }}
                   >
                     <div className="card-body">

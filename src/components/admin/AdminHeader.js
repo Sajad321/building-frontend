@@ -15,11 +15,11 @@ function AdminHeader(props) {
         AddOfficeButton={props.handleAddOfficeButton}
         AddReceiptButton={props.handleAddReceiptButton}
       />
-      {/* <SettingsModal
+      <SettingsModal
         show={settingsModalShow}
         onHide={() => setSettingsModalShow(false)}
         logoutWithRedirect={props.logoutWithRedirect}
-      /> */}
+      />
       <div className="row">
         <div
           className="width-others-wide fixed-top mr-auto admin-nav-bg top-navbar top-height logo"
@@ -83,18 +83,37 @@ function AdminHeader(props) {
                   </a>{" "}
                   <a
                     href="#"
-                    className={"nav_link " + props.Active.Institutes}
+                    className={"nav_link " + props.Active.Notifications}
+                    onClick={props.handleNotificationsButton}
+                  >
+                    {" "}
+                    <FontAwesomeIcon
+                      icon="exclamation-circle"
+                      className={"nav_logo-icon " + props.Active.Notifications}
+                      color="white"
+                      size="2x"
+                    />
+                    <span
+                      className={"nav_name " + props.Active.Notifications}
+                      id="nav-text"
+                    >
+                      الاشعارات
+                    </span>{" "}
+                  </a>{" "}
+                  <a
+                    href="#"
+                    className={"nav_link " + props.Active.Offices}
                     onClick={props.handleOfficesButton}
                   >
                     {" "}
                     <FontAwesomeIcon
                       icon="school"
-                      className={"nav_logo-icon " + props.Active.Institutes}
+                      className={"nav_logo-icon " + props.Active.Offices}
                       color="white"
                       size="2x"
                     />
                     <span
-                      className={"nav_name " + props.Active.Institutes}
+                      className={"nav_name " + props.Active.Offices}
                       id="nav-text"
                     >
                       المكاتب
@@ -102,18 +121,18 @@ function AdminHeader(props) {
                   </a>{" "}
                   <a
                     href="#"
-                    className={"nav_link " + props.Active.Institutes}
+                    className={"nav_link " + props.Active.Expenses}
                     onClick={props.handleExpensesButton}
                   >
                     {" "}
                     <FontAwesomeIcon
                       icon="file-invoice-dollar"
-                      className={"nav_logo-icon " + props.Active.Institutes}
+                      className={"nav_logo-icon " + props.Active.Expenses}
                       color="white"
                       size="2x"
                     />
                     <span
-                      className={"nav_name " + props.Active.Institutes}
+                      className={"nav_name " + props.Active.Expenses}
                       id="nav-text"
                     >
                       الصرفيات

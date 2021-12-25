@@ -2,36 +2,13 @@ import React, { useState, useEffect, Fragment } from "react";
 import { toast } from "react-toastify";
 const apiUrl = process.env.API_URL;
 
-function AddStudent({ page, dataToChange, sideBarShow }) {
-  const [data, setData] = useState({
-    institutes: [],
-  });
+function AddOffice({ page, dataToChange, sideBarShow }) {
   const [dataToSend, setDataToSend] = useState({
     id: "",
     name: "",
-    date_of_receipt: "",
-    date_of_claiming: "",
-    amount: 0,
-    notes: "",
   });
   const [saving, setSaving] = useState(false);
   useEffect(() => {
-    const getStuff = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/institute`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer`,
-          },
-        });
-
-        const responseData = await response.json();
-        setData(responseData);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    getStuff();
     if (Object.keys(dataToChange).length != 0) {
       setDataToSend(dataToChange);
     }
@@ -39,29 +16,16 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
   }, []);
   const handleNameChange = (e) =>
     setDataToSend({ ...dataToSend, name: e.target.value });
-  const handleAmountChange = (e) => {
-    setDataToSend({ ...dataToSend, amount: Number(e.target.value) });
-  };
-  const handleDateOfReceiptChange = (e) =>
-    setDataToSend({ ...dataToSend, date_of_receipt: e.target.value });
-  const handleDateOfClaimingChange = (e) =>
-    setDataToSend({ ...dataToSend, date_of_claiming: e.target.value });
-  const handleNotesChange = (e) =>
-    setDataToSend({ ...dataToSend, notes: e.target.value });
 
   const saveOffice = async () => {
     try {
       setSaving(true);
       const response = await fetch(
-        `${apiUrl}/student` +
+        `${apiUrl}/offices` +
           `${
             dataToSend.id != ""
-              ? `?student_id=${Number(dataToSend.id)}&name=${
-                  dataToSend.name
-                }&dob=${dataToSend.dob}&institute_id=${
-                  dataToSend.institute_id
-                }&phone=${dataToSend.phone}&note=${dataToSend.note}`
-              : `?name=${dataToSend.name}&dob=${dataToSend.dob}&institute_id=${dataToSend.institute_id}&phone=${dataToSend.phone}&note=${dataToSend.note}`
+              ? `?office_id=${Number(dataToSend.id)}&name=${dataToSend.name}`
+              : `?name=${dataToSend.name}`
           }`,
         {
           method: dataToSend.id != "" ? "PATCH" : "POST",
@@ -124,80 +88,6 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
                     اسم المكتب
                   </label>
                 </div>
-                <div className="form-group row">
-                  <div className="col-7 offset-1 order-last order-md-first">
-                    <input
-                      id="date_of_receipt"
-                      type="date"
-                      className="form-control text"
-                      onChange={handleDateOfReceiptChange}
-                      value={dataToSend.date_of_receipt}
-                      required
-                    ></input>
-                  </div>
-                  <label
-                    htmlFor="date_of_receipt"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    تاريخ الاستلام
-                  </label>
-                </div>
-
-                <div className="form-group row">
-                  <div className="col-7 offset-1 order-last order-md-first">
-                    <input
-                      id="date_of_claiming"
-                      type="date"
-                      className="form-control text"
-                      onChange={handleDateOfClaimingChange}
-                      value={dataToSend.date_of_claiming}
-                      required
-                    ></input>
-                  </div>
-                  <label
-                    htmlFor="date_of_claiming"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    تاريخ الاستحقاق
-                  </label>
-                </div>
-                <div className="form-group row">
-                  <div className="col-7 offset-1 order-last order-md-first">
-                    <input
-                      id="amount"
-                      type="number"
-                      className="form-control text"
-                      onChange={handleAmountChange}
-                      value={dataToSend.amount}
-                      required
-                    ></input>
-                  </div>
-                  <label
-                    htmlFor="amount"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    المبلغ
-                  </label>
-                </div>
-                <div className="form-group row">
-                  <div className="col-7 offset-1 order-last order-md-first">
-                    <input
-                      id="note"
-                      type="text"
-                      onChange={handleNotesChange}
-                      placeholder="الملاحظات"
-                      className="form-control text"
-                      value={dataToSend.notes}
-                      // required
-                    ></input>
-                  </div>
-                  <label
-                    htmlFor="note"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    الملاحظات
-                  </label>
-                </div>
 
                 <div className="form-group row">
                   <div className="col-3 offset-2 mt-3">
@@ -224,4 +114,4 @@ function AddStudent({ page, dataToChange, sideBarShow }) {
   );
 }
 
-export default AddStudent;
+export default AddOffice;

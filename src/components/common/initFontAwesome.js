@@ -20,6 +20,7 @@ import {
   faCheckCircle,
   faTimesCircle,
   faFileInvoiceDollar,
+  faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 function initFontAwesome() {
@@ -43,6 +44,7 @@ function initFontAwesome() {
   library.add(faCheckCircle);
   library.add(faTimesCircle);
   library.add(faFileInvoiceDollar);
+  library.add(faExclamationCircle);
 }
 
 export default initFontAwesome;

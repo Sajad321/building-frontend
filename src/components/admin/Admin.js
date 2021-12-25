@@ -5,8 +5,10 @@ import MainAdmin from "./MainAdmin";
 import Offices from "./Lists/Offices";
 import OfficeDetails from "./Lists/OfficeDetails";
 import Expenses from "./Lists/Expenses";
-import AddOffice from "./Forms/AddOffice";
+import AddOffice from "./Forms/AddOfficeDetails";
 import AddReceipt from "./Forms/AddReceipt";
+import AddOfficeDetails from "./Forms/AddOfficeDetails";
+import Notifications from "./Notifications";
 const apiUrl = process.env.API_URL;
 
 function Admin(props) {
@@ -53,6 +55,7 @@ function Admin(props) {
         logoutWithRedirect={props.logoutWithRedirect}
         Active={Act}
         MainButton={handleMainButton}
+        handleNotificationsButton={handleNotificationsButton}
         handleOfficesButton={handleOfficesButton}
         handleExpensesButton={handleExpensesButton}
         handleAddOfficeButton={handleAddOfficeButton}
@@ -69,13 +72,17 @@ function Admin(props) {
     setDataToChange({});
   };
 
+  const handleNotificationsButton = () => {
+    setPage("Notifications");
+    setDataToChange({});
+  };
+
   const handleOfficesButton = () => {
     setPage("Offices");
     setDataToChange({});
   };
 
-  const handleOfficeDetails = (office) => {
-    setOffice(office);
+  const handleOfficeDetails = () => {
     setPage("OfficeDetails");
     setDataToChange({});
   };
@@ -90,6 +97,11 @@ function Admin(props) {
     setDataToChange({});
   };
 
+  const handleAddOfficeDetailsButton = () => {
+    setPage("AddOfficeDetails");
+    setDataToChange({});
+  };
+
   const handleAddReceiptButton = () => {
     setPage("AddReceipt");
     setDataToChange({});
@@ -98,6 +110,11 @@ function Admin(props) {
   const handleEditOfficeButton = (office) => {
     setDataToChange(office);
     setPage("AddOffice");
+  };
+
+  const handleEditOfficeDetailsButton = (office_details) => {
+    setDataToChange(office_details);
+    setPage("AddOfficeDetails");
   };
 
   const handleEditReceiptButton = (receipt) => {
@@ -116,10 +133,20 @@ function Admin(props) {
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
     );
+  } else if (page == "Notifications") {
+    return (
+      <Fragment>
+        {AdminHeaderFunction({ Notifications: "active" })}
+        {/* End of Navbar */}
+        {/* Offices */}
+        <Notifications sideBarShow={sideBarShow} />
+        <AdminFooter sideBarShow={sideBarShow} />
+      </Fragment>
+    );
   } else if (page == "Offices") {
     return (
       <Fragment>
-        {AdminHeaderFunction({ Students: "active" })}
+        {AdminHeaderFunction({ Offices: "active" })}
         {/* End of Navbar */}
         {/* Offices */}
         <Offices
@@ -127,6 +154,7 @@ function Admin(props) {
           edit={handleEditOfficeButton}
           page={handleMainButton}
           sideBarShow={sideBarShow}
+          setOffice={setOffice}
         />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
@@ -134,14 +162,15 @@ function Admin(props) {
   } else if (page == "OfficeDetails") {
     return (
       <Fragment>
-        {AdminHeaderFunction({ Students: "active" })}
+        {AdminHeaderFunction({ Offices: "active" })}
         {/* End of Navbar */}
         {/* Offices */}
         <OfficeDetails
-          edit={handleEditOfficeButton}
-          page={handleMainButton}
+          edit={handleEditOfficeDetailsButton}
+          addDetails={handleAddOfficeDetailsButton}
           sideBarShow={sideBarShow}
           office={office}
+          setOffice={setOffice}
         />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
@@ -149,7 +178,7 @@ function Admin(props) {
   } else if (page == "Expenses") {
     return (
       <Fragment>
-        {AdminHeaderFunction({ Students: "active" })}
+        {AdminHeaderFunction({ Expenses: "active" })}
         {/* End of Navbar */}
         {/* Expenses */}
         <Expenses edit={handleEditReceiptButton} sideBarShow={sideBarShow} />
@@ -180,6 +209,21 @@ function Admin(props) {
           page={handleMainButton}
           dataToChange={dataToChange}
           sideBarShow={sideBarShow}
+        />
+        <AdminFooter sideBarShow={sideBarShow} />
+      </Fragment>
+    );
+  } else if (page == "AddOfficeDetails") {
+    return (
+      <Fragment>
+        {AdminHeaderFunction({ Add: "active" })}
+        {/* End of Navbar */}
+        {/* AddOfficeDetails */}
+        <AddOfficeDetails
+          page={handleMainButton}
+          dataToChange={dataToChange}
+          sideBarShow={sideBarShow}
+          office={office}
         />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
