@@ -1,40 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import printJS from "print-js";
+import PrintReceipt from "./PrintReceipt";
 const apiUrl = process.env.API_URL;
 
-function AddInstitute({ page, dataToChange, sideBarShow }) {
+function AddReceipt({ page, dataToChange, sideBarShow }) {
   const [dataToSend, setDataToSend] = useState({
     id: "",
-    voucher_number: "",
     name: "",
     expense_type: "",
     amount: "",
     date: "",
   });
-  const [institutes, setInstitutes] = useState([]);
+  let idof = 0;
   useEffect(() => {
-    const getStuff = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/institute`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer`,
-          },
-        });
-
-        const responseData = await response.json();
-        setInstitutes(responseData.institutes);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    getStuff();
     if (Object.keys(dataToChange).length) {
       setDataToSend(dataToChange);
     }
   }, []);
-  const handleVoucherNumberChange = (e) =>
-    setDataToSend({ ...dataToSend, voucher_number: e.target.value });
   const handleNameChange = (e) =>
     setDataToSend({ ...dataToSend, name: e.target.value });
   const handleExpenseTypeChange = (e) =>
@@ -52,7 +35,7 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
           `${
             dataToSend.id != ""
               ? "/" + dataToSend.id
-              : `?&name=${dataToSend.name}&voucher_number=${dataToSend.voucher_number}&expense_type=${dataToSend.expense_type}&amount=${dataToSend.amount}&date=${dataToSend.date}`
+              : `?&name=${dataToSend.name}&expense_type=${dataToSend.expense_type}&amount=${dataToSend.amount}&date=${dataToSend.date}`
           }`,
         {
           method: dataToSend.id != "" ? "PATCH" : "POST",
@@ -65,17 +48,28 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
 
       const responseData = await response.json();
 
+      setDataToSend({ ...dataToSend, id: responseData.id });
+
       toast.success("تم حفظ الوصل");
-      page();
     } catch (error) {
       console.log(error.message);
       setSaving(false);
       toast.error("فشل الحفظ");
     }
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    saveReceipt();
+    await saveReceipt();
+    pp();
+  };
+  const pp = () => {
+    printJS({
+      printable: "print-receipt",
+      type: "html",
+      targetStyles: ["*"],
+      font_size: "20px",
+    });
+    page();
   };
   return (
     <section className="main">
@@ -91,23 +85,6 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
           <div className="row pt-md-3 pr-2 pl-2 mt-md-3 mb-5">
             <div className="col-sm-12 p-2">
               <form onSubmit={handleSubmit}>
-                <div className="form-group row">
-                  <div className="col-md-4 offset-md-6 order-last order-md-first">
-                    <input
-                      type="number"
-                      className="form-control text"
-                      onChange={handleVoucherNumberChange}
-                      value={dataToSend.voucher_number}
-                      required
-                    ></input>
-                  </div>
-                  <label
-                    htmlFor="name"
-                    className="col-12 col-md-2 col-form-label text-center text-white order-first order-md-last"
-                  >
-                    رقم الوصل
-                  </label>
-                </div>
                 <div className="form-group row">
                   <div className="col-md-4 offset-md-6 order-last order-md-first">
                     <input
@@ -181,6 +158,15 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
                     التاريخ
                   </label>
                 </div>
+                <div style={{ display: "none" }}>
+                  <PrintReceipt
+                    id={dataToSend.id}
+                    name={dataToSend.name}
+                    expense_type={dataToSend.expense_type}
+                    amount={dataToSend.amount}
+                    date={dataToSend.date}
+                  />
+                </div>
                 <div className="form-group row">
                   <div className="col-10 offset-1 col-sm-3 offset-sm-6 mt-3">
                     {!saving ? (
@@ -206,4 +192,4 @@ function AddInstitute({ page, dataToChange, sideBarShow }) {
   );
 }
 
-export default AddInstitute;
+export default AddReceipt;

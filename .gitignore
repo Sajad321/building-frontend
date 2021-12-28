@@ -4,6 +4,7 @@ builds/
 windows_installer
 SAPI
 build
+release-builds
 
 # Development folders and files #
 #################################

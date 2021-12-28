@@ -37,7 +37,7 @@ function AddOfficeDetails({ page, dataToChange, office, sideBarShow }) {
         `${apiUrl}/offices/${office.id}` +
           `${
             dataToSend.id != ""
-              ? `?id=${dataToSend.id}&name=${dataToSend.name}&amount=${dataToSend.amount}&date_of_receipt=${dataToSend.date_of_receipt}&date_of_claiming=${dataToSend.date_of_claiming}&notes=${dataToSend.notes}`
+              ? `?office_details_id=${dataToSend.id}&renter=${dataToSend.renter}&amount=${dataToSend.amount}&date_of_receipt=${dataToSend.date_of_receipt}&date_of_claiming=${dataToSend.date_of_claiming}&notes=${dataToSend.notes}`
               : `?renter=${dataToSend.renter}&amount=${dataToSend.amount}&date_of_receipt=${dataToSend.date_of_receipt}&date_of_claiming=${dataToSend.date_of_claiming}&notes=${dataToSend.notes}`
           }`,
         {
@@ -56,7 +56,7 @@ function AddOfficeDetails({ page, dataToChange, office, sideBarShow }) {
 
       const responseData = await response.json();
 
-      toast.success("تم حفظ المكتب");
+      toast.success("تم حفظ الاضافة");
       page();
     } catch (error) {
       console.log(error.message);
@@ -183,7 +183,7 @@ function AddOfficeDetails({ page, dataToChange, office, sideBarShow }) {
                         type="submit"
                         className="btn btn-success btn-block"
                       >
-                        حفظ المكتب
+                        حفظ الاضافة
                       </button>
                     ) : (
                       <button disabled className="btn btn-success btn-block">

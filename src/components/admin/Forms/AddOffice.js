@@ -12,7 +12,6 @@ function AddOffice({ page, dataToChange, sideBarShow }) {
     if (Object.keys(dataToChange).length != 0) {
       setDataToSend(dataToChange);
     }
-    // console.log(document.getElementById("myimage").src);
   }, []);
   const handleNameChange = (e) =>
     setDataToSend({ ...dataToSend, name: e.target.value });
@@ -29,15 +28,6 @@ function AddOffice({ page, dataToChange, sideBarShow }) {
           }`,
         {
           method: dataToSend.id != "" ? "PATCH" : "POST",
-          // headers: {
-          //   "Content-Type": "multipart/form-data",
-          // },
-
-          // JSON.stringify({
-          //   ...dataToSend,
-          //   institute_id: Number(dataToSend.institute_id),
-          //   phone: Number(dataToSend.phone),
-          // }),
         }
       );
 

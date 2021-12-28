@@ -48,35 +48,25 @@ function Expenses({ sideBarShow }) {
     e.preventDefault();
     const reg = new RegExp(search, "i");
     if (searchType == "1") {
-      setSearchedData({
-        students: [...data.students].filter((d) => d.name.match(reg)),
-        attendance: [...data.attendance],
+      setData({
+        ...data,
+        searchedExpenses: [...data.expenses].filter((d) => d.name.match(reg)),
       });
     } else if (searchType == "2") {
-      setSearchedData({
-        attendance: [...data.attendance].filter(
+      setData({
+        ...data,
+        searchedExpenses: [...data.expenses].filter(
           (d) => d.date <= search2 && d.date >= search
         ),
-        students: [...data.students],
       });
     }
   };
 
-  // const handleEditButton = (student) => {
-  //   edit(student);
-  // };
-
   const printTable = () => {
-    // let divToPrint = document.getElementById("print-table");
-    // newWin = window.open("");
-    // newWin.document.write(divToPrint.outerHTML);
-    // newWin.print();
-    // newWin.close();
     printJS({
       printable: "print-table",
       type: "html",
     });
-    // window.print();
   };
 
   const searchBar = () => {
@@ -145,7 +135,6 @@ function Expenses({ sideBarShow }) {
           >
             <td className="t-id">{index + 1}</td>
             <td className="t-name">{expense.name}</td>
-            <td className="">{expense.voucher_number}</td>
             <td className="">{expense.type}</td>
             <td className="">{expense.amount}</td>
             <td className="">{expense.date}</td>
@@ -162,7 +151,6 @@ function Expenses({ sideBarShow }) {
             <tr className="">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
-              <th className="">رقم الوصل</th>
               <th className="">نوع الصرف</th>
               <th className="">المبلغ</th>
               <th className="">التاريخ</th>
@@ -181,7 +169,6 @@ function Expenses({ sideBarShow }) {
           >
             <td className="t-id">{index + 1}</td>
             <td className="t-name">{expense.name}</td>
-            <td className="">{expense.voucher_number}</td>
             <td className="">{expense.type}</td>
             <td className="">{expense.amount}</td>
             <td className="">{expense.date}</td>
@@ -198,7 +185,6 @@ function Expenses({ sideBarShow }) {
             <tr className="">
               <th className="t-id">ت</th>
               <th className="t-name">الاسم</th>
-              <th className="">رقم الوصل</th>
               <th className="">نوع الصرف</th>
               <th className="">المبلغ</th>
               <th className="">التاريخ</th>

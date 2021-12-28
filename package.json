@@ -42,9 +42,9 @@
     "start": "cross-env NODE_ENV=development webpack serve --hot --host localhost --config=./webpack.dev.config.js --mode development",
     "build:python": "PyInstaller --clean -F --onefile -y .\\main.spec",
     "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
-    "prepackage": "rimraf ./build && mkdir build && rimraf ./dist && mkdir dist && rimraf ./windows_installer && mkdir windows_installer",
-    "package": "npm run build",
-    "postpackage": "electron-packager --win32metadata.requested-execution-level=requireAdministrator ./ --out=./build && node build_installer.js"
+    "prepackage": "rimraf ./build && mkdir build && rimraf ./dist && mkdir dist && rimraf ./release-builds && mkdir release-builds",
+    "package": "npm run build && electron-packager --win32metadata.requested-execution-level=requireAdministrator ./ --out=./build --prune --asar --extra-resource=py_dist --ignore=release-builds --ignore=docs --ignore=for-code",
+    "postpackage": "electron-builder --prepackaged ./build/building-managment-system-win32-x64 --publish=never"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.8",
@@ -78,6 +78,7 @@
     "babel-preset-react-app": "^7.0.2",
     "cross-env": "^7.0.3",
     "electron": "^13.1.7",
+    "electron-builder": "^22.14.5",
     "electron-devtools-installer": "^3.1.1",
     "electron-packager": "^15.2.0",
     "electron-wix-msi": "^3.2.0",
@@ -96,5 +97,27 @@
     "webpack-bundle-analyzer": "^3.1.0",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "build": {
+    "extends": null,
+    "productName": "BMS",
+    "appId": "com.app.bms",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "output": "release-builds"
+    },
+    "publish": [
+      {
+        "provider": "github"
+      }
+    ]
   }
 }

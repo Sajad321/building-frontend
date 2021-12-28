@@ -5,7 +5,7 @@ import MainAdmin from "./MainAdmin";
 import Offices from "./Lists/Offices";
 import OfficeDetails from "./Lists/OfficeDetails";
 import Expenses from "./Lists/Expenses";
-import AddOffice from "./Forms/AddOfficeDetails";
+import AddOffice from "./Forms/AddOffice";
 import AddReceipt from "./Forms/AddReceipt";
 import AddOfficeDetails from "./Forms/AddOfficeDetails";
 import Notifications from "./Notifications";

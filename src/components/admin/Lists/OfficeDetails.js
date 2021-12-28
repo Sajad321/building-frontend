@@ -42,6 +42,12 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
   const handleSearchButton = (e) => {
     e.preventDefault();
     const reg = new RegExp(search, "i");
+    if (searchType == "1") {
+      setData({
+        ...data,
+        searchedDetails: [...data.details].filter((d) => d.renter.match(reg)),
+      });
+    }
   };
 
   // const handleEditButton = (student) => {
@@ -68,11 +74,6 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
   //   return true;
   // }
   const printTable = () => {
-    // let divToPrint = document.getElementById("print-table");
-    // PrintElem(divToPrint);
-    // printJS({ printable: "print-table", type: "html", targetStyles: ["*"] });
-    // window.print();
-
     printJS({
       printable: "print-table",
       type: "html",
@@ -90,6 +91,14 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
             <td className="">{detail.date_of_claiming}</td>
             <td className="">{detail.amount}</td>
             <td className="">{detail.notes}</td>
+            <td>
+              <button
+                onClick={() => edit(detail)}
+                className="btn btn-secondary text-white"
+              >
+                تعديل
+              </button>
+            </td>
           </tr>
         );
       });
@@ -107,6 +116,7 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
               <th className="">تاريخ الاستحقاق</th>
               <th className="">المبلغ</th>
               <th className="">الملاحظات</th>
+              <th className="">&nbsp;</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -122,6 +132,14 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
             <td className="">{detail.date_of_claiming}</td>
             <td className="">{detail.amount}</td>
             <td className="">{detail.notes}</td>
+            <td>
+              <button
+                onClick={() => edit(detail)}
+                className="btn btn-secondary text-white"
+              >
+                تعديل
+              </button>
+            </td>
           </tr>
         );
       });
@@ -139,6 +157,7 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
               <th className="">تاريخ الاستحقاق</th>
               <th className="">المبلغ</th>
               <th className="">الملاحظات</th>
+              <th className="">&nbsp;</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>

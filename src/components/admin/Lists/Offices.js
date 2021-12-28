@@ -65,7 +65,10 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
                           <FontAwesomeIcon icon="users" size="3x" />
                         </div>
                         <button
-                          onClick={() => handleEditButton(office)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            edit(office);
+                          }}
                           className="btn btn-secondary text-white"
                         >
                           تعديل

@@ -28,7 +28,10 @@ function AdminHeader(props) {
           <div className="row justify-content-center">
             <div className="col-auto">
               <NavLink to="/" className="logo-text">
-                نظام ادارة بناية
+                نظام ادارة بناية{" "}
+                {localStorage.getItem("token")
+                  ? JSON.parse(localStorage.getItem("token")).building
+                  : ""}
               </NavLink>
             </div>
           </div>

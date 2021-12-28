@@ -12,6 +12,7 @@ function SettingsModal(props) {
     name: "",
     username: "",
     password: "",
+    building: "",
   });
   const [settingsPage, setSettingsPage] = useState("UsersPage");
 
@@ -61,6 +62,7 @@ function SettingsModal(props) {
                           name: user.name,
                           username: user.username,
                           password: user.password,
+                          building: user.building,
                         });
                         setSettingsPage("AddPage");
                       }}
@@ -96,10 +98,10 @@ function SettingsModal(props) {
             user.id != ""
               ? `user?user_id=${Number(user.id)}&name=${user.name}&username=${
                   user.username
-                }&password=${Number(user.password)}`
+                }&password=${Number(user.password)}&building=${user.building}`
               : `register?name=${user.name}&username=${
                   user.username
-                }&password=${Number(user.password)}`
+                }&password=${Number(user.password)}&building=${user.building}`
           }`,
         {
           method: user.id != "" ? "PATCH" : "POST",
@@ -115,6 +117,7 @@ function SettingsModal(props) {
         name: "",
         username: "",
         password: "",
+        building: "",
       });
       setSettingsPage("UsersPage");
       setSaving(false);
@@ -139,8 +142,8 @@ function SettingsModal(props) {
     const handlePasswordChange = (e) => {
       setUser({ ...user, password: e.target.value });
     };
-    const handleAuthChange = (e) => {
-      setUser({ ...user, auth: e.target.value });
+    const handleBuildingChange = (e) => {
+      setUser({ ...user, building: e.target.value });
     };
     return (
       <div
@@ -203,6 +206,25 @@ function SettingsModal(props) {
                 كلمة المرور
               </label>
             </div>
+            <div className="form-group row">
+              <div className="">
+                <input
+                  type="text"
+                  id="building"
+                  placeholder="اسم البناية"
+                  className="form-control text"
+                  onChange={handleBuildingChange}
+                  value={user.building}
+                  required
+                ></input>
+              </div>
+              <label
+                htmlFor="building"
+                className="ml-4 col-form-label text-center text-white"
+              >
+                اسم البناية
+              </label>
+            </div>
             <div className="form-group">
               <div className="mt-4 align-self-center">
                 {!saving ? (
@@ -242,7 +264,10 @@ function SettingsModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          الاعدادات مرحبا {JSON.parse(localStorage.getItem("token")).name}
+          الاعدادات مرحبا{" "}
+          {localStorage.getItem("token")
+            ? JSON.parse(localStorage.getItem("token")).name
+            : ""}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>{pageToReturn()}</Modal.Body>
@@ -269,7 +294,7 @@ function SettingsModal(props) {
                 name: "",
                 username: "",
                 password: "",
-                auth: "",
+                building: "",
               });
               setSettingsPage("AddPage");
             }}
@@ -286,7 +311,7 @@ function SettingsModal(props) {
                 name: JSON.parse(localStorage.getItem("token")).name,
                 username: JSON.parse(localStorage.getItem("token")).username,
                 password: JSON.parse(localStorage.getItem("token")).password,
-                auth: JSON.parse(localStorage.getItem("token")).auth,
+                building: JSON.parse(localStorage.getItem("token")).building,
               });
               setSettingsPage("AddPage");
             }}
@@ -303,6 +328,7 @@ function SettingsModal(props) {
                 name: "",
                 username: "",
                 password: "",
+                building: "",
               });
               setSettingsPage("UsersPage");
             }}
