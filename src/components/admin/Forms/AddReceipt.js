@@ -12,7 +12,6 @@ function AddReceipt({ page, dataToChange, sideBarShow }) {
     amount: "",
     date: "",
   });
-  let idof = 0;
   useEffect(() => {
     if (Object.keys(dataToChange).length) {
       setDataToSend(dataToChange);

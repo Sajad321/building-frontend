@@ -4,26 +4,26 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
 const url = require("url");
-// let backend = path.join(process.cwd(), "py_dist/main.exe");
-// var execfile = require("child_process").execFile;
-// const { exec } = require("child_process");
-// execfile(
-//   backend,
-//   {
-//     windowsHide: true,
-//   },
-//   (err, stdout, stderr) => {
-//     if (err) {
-//       console.log(err);
-//     }
-//     if (stdout) {
-//       console.log(stdout);
-//     }
-//     if (stderr) {
-//       console.log(stderr);
-//     }
-//   }
-// );
+let backend = path.join(process.cwd(), "resources/py_main.exe");
+var execfile = require("child_process").execFile;
+const { exec } = require("child_process");
+execfile(
+  backend,
+  {
+    windowsHide: true,
+  },
+  (err, stdout, stderr) => {
+    if (err) {
+      console.log(err);
+    }
+    if (stdout) {
+      console.log(stdout);
+    }
+    if (stderr) {
+      console.log(stderr);
+    }
+  }
+);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -161,14 +161,14 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
     loginWindow = null;
-    // exec("taskkill /f /t /im main.exe", (err, stdout, stderr) => {
-    //   if (err) {
-    //     console.log(err);
-    //     return;
-    //   }
-    //   console.log(`stdout: ${stdout}`);
-    //   console.log(`stderr: ${stderr}`);
-    // });
+    exec(`taskkill /f /t /im py_main.exe`, (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+    });
     app.quit();
   });
   loginWindow.on("closed", function () {
@@ -177,48 +177,18 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
     loginWindow = null;
-    // exec("taskkill /f /t /im main.exe", (err, stdout, stderr) => {
-    //   if (err) {
-    //     console.log(err);
-    //     return;
-    //   }
-    //   console.log(`stdout: ${stdout}`);
-    //   console.log(`stderr: ${stderr}`);
-    // });
+    exec(`taskkill /f /t /im py_main.exe`, (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+    });
     app.quit();
   });
 }
 
-ipcMain.on("confirm-delete-student-dialog", async (event, info) => {
-  const win = BrowserWindow.getFocusedWindow();
-  let response = await dialog.showMessageBox(win, {
-    buttons: ["لا", "نعم"],
-    message: "هل انت متأكد؟",
-  });
-  if (response.response == 1) {
-    event.sender.send("delete-student");
-  }
-});
-ipcMain.on("confirm-attendance-student-dialog", async (event, info) => {
-  const win = BrowserWindow.getFocusedWindow();
-  let response = await dialog.showMessageBox(win, {
-    buttons: ["لا", "نعم"],
-    message: "هل انت متأكد؟",
-  });
-  if (response.response == 1) {
-    event.sender.send("attend-student");
-  }
-});
-ipcMain.on("confirm-attendance-dialog", async (event, info) => {
-  const win = BrowserWindow.getFocusedWindow();
-  let response = await dialog.showMessageBox(win, {
-    buttons: ["لا", "نعم"],
-    message: "هل انت متأكد؟",
-  });
-  if (response.response == 1) {
-    event.sender.send("attendance-confirmed");
-  }
-});
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -229,6 +199,14 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
+    exec(`taskkill /f /t /im py_main.exe`, (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+    });
     app.quit();
   }
 });

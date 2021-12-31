@@ -265,7 +265,7 @@ function SettingsModal(props) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           الاعدادات مرحبا{" "}
-          {localStorage.getItem("token")
+          {localStorage.getItem("token") != "undefined"
             ? JSON.parse(localStorage.getItem("token")).name
             : ""}
         </Modal.Title>
