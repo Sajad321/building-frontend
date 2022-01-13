@@ -4,9 +4,12 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
 const url = require("url");
+const { get } = require("axios");
+const appEnv = require("./env.json");
+const apiUrl = appEnv.API_URL;
+
 let backend = path.join(process.cwd(), "resources/py_main.exe");
 var execfile = require("child_process").execFile;
-const { exec } = require("child_process");
 execfile(
   backend,
   {
@@ -161,31 +164,31 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
     loginWindow = null;
-    exec(`taskkill /f /t /im py_main.exe`, (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-    });
-    app.quit();
+    get(`${apiUrl}/shutdown`)
+      .then(() => {
+        console.log("ended");
+        app.quit();
+      })
+      .catch((e) => {
+        console.log(e);
+        app.quit();
+      });
   });
   loginWindow.on("closed", function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null;
     loginWindow = null;
-    exec(`taskkill /f /t /im py_main.exe`, (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-    });
-    app.quit();
+    mainWindow = null;
+    get(`${apiUrl}/shutdown`)
+      .then(() => {
+        console.log("ended");
+        app.quit();
+      })
+      .catch((e) => {
+        console.log(e);
+        app.quit();
+      });
   });
 }
 
@@ -199,17 +202,18 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    exec(`taskkill /f /t /im py_main.exe`, (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-    });
-    app.quit();
+    get(`${apiUrl}/shutdown`)
+      .then(() => {
+        console.log("ended");
+        app.quit();
+      })
+      .catch((e) => {
+        console.log(e);
+        app.quit();
+      });
   }
 });
+
 app.disableHardwareAcceleration();
 app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the

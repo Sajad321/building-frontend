@@ -6,7 +6,7 @@ const apiUrl = process.env.API_URL;
 
 // var { ipcRenderer } = require("electron");
 
-function Expenses({ sideBarShow }) {
+function Expenses({ edit, sideBarShow }) {
   const [data, setData] = useState({ expenses: [], searchedExpenses: [] });
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
@@ -138,6 +138,14 @@ function Expenses({ sideBarShow }) {
             <td className="">{expense.type}</td>
             <td className="">{expense.amount}</td>
             <td className="">{expense.date}</td>
+            <td className="">
+              <button
+                className="btn btn-secondary"
+                onClick={() => edit(expense)}
+              >
+                تعديل
+              </button>
+            </td>
           </tr>
         );
       });
@@ -154,6 +162,7 @@ function Expenses({ sideBarShow }) {
               <th className="">نوع الصرف</th>
               <th className="">المبلغ</th>
               <th className="">التاريخ</th>
+              <th>&nbsp;</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -172,6 +181,14 @@ function Expenses({ sideBarShow }) {
             <td className="">{expense.type}</td>
             <td className="">{expense.amount}</td>
             <td className="">{expense.date}</td>
+            <td className="">
+              <button
+                className="btn btn-secondary"
+                onClick={() => edit(expense)}
+              >
+                تعديل
+              </button>
+            </td>
           </tr>
         );
       });
@@ -188,6 +205,7 @@ function Expenses({ sideBarShow }) {
               <th className="">نوع الصرف</th>
               <th className="">المبلغ</th>
               <th className="">التاريخ</th>
+              <th>&nbsp;</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>

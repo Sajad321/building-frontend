@@ -8,7 +8,7 @@ function AddOfficeDetails({ page, dataToChange, office, sideBarShow }) {
     renter: "",
     date_of_receipt: "",
     date_of_claiming: "",
-    amount: 0,
+    amount: "",
     notes: "",
   });
   const [saving, setSaving] = useState(false);

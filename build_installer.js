@@ -21,10 +21,10 @@ const msiCreator = new MSICreator({
 
   // Configure metadata
   description: "System for managing a building",
-  exe: "building-managment-system-win32-x64.exe",
+  exe: "building-managment-system.exe",
   name: "Building Management System Desktop App",
   manufacturer: "BeSmarty Inc",
-  version: "1.0.0",
+  version: "1.5.0",
   shortcutName: "BMS",
 
   // Configure installer User Interface

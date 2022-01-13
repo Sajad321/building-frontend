@@ -33,7 +33,7 @@ function AddReceipt({ page, dataToChange, sideBarShow }) {
         `${apiUrl}/expenses` +
           `${
             dataToSend.id != ""
-              ? "/" + dataToSend.id
+              ? `/${dataToSend.id}?&name=${dataToSend.name}&expense_type=${dataToSend.expense_type}&amount=${dataToSend.amount}&date=${dataToSend.date}`
               : `?&name=${dataToSend.name}&expense_type=${dataToSend.expense_type}&amount=${dataToSend.amount}&date=${dataToSend.date}`
           }`,
         {

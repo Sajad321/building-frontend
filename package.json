@@ -1,6 +1,6 @@
 {
   "name": "building-managment-system",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "System for managing a building",
   "private": false,
   "repository": {
@@ -39,9 +39,9 @@
   "main": "main.js",
   "scripts": {
     "prod": "cross-env NODE_ENV=production webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
-    "start": "cross-env NODE_ENV=development webpack serve --hot --host localhost --config=./webpack.dev.config.js --mode development",
+    "start": "cross-env NODE_ENV=development API_URL=http://localhost:8000 webpack serve --hot --host localhost --config=./webpack.dev.config.js --mode development",
     "build:python": "PyInstaller --clean -F --onefile -y .\\main.spec",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
+    "build": "cross-env NODE_ENV=production API_URL=http://localhost:8000 webpack --config webpack.build.config.js --mode production",
     "prepackage": "rimraf ./build && mkdir build && rimraf ./dist && mkdir dist",
     "package": "npm run build && electron-packager --win32metadata.requested-execution-level=requireAdministrator ./ --out=./build --prune --asar --extra-resource=py_main.exe --ignore=release-builds --ignore=docs --ignore=for-code",
     "postpackage": "electron-builder --prepackaged ./build/building-managment-system-win32-x64 --publish=never"
@@ -51,6 +51,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "axios": "^0.24.0",
     "bootstrap": "^4.3.1",
     "css-loader": "^2.1.1",
     "electron-context-menu": "^3.1.1",
@@ -100,8 +101,8 @@
   },
   "build": {
     "extends": null,
-    "productName": "BMS",
-    "appId": "com.app.bms",
+    "productName": "BMS-3",
+    "appId": "com.app.bms-3",
     "win": {
       "target": [
         "nsis"
@@ -113,7 +114,7 @@
       "perMachine": true
     },
     "directories": {
-      "output": "release-builds"
+      "output": "release-builds/3"
     },
     "publish": [
       {
