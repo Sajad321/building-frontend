@@ -2,34 +2,38 @@ import React, { useState, useEffect, Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import printJS from "print-js";
+import ConfirmModal from "../../common/ConfirmModal";
 const apiUrl = process.env.API_URL;
-var dialog = require("electron").remote.dialog;
 
 function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
   const [data, setData] = useState({ details: [], searchedDetails: [] });
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
+  const [confirmModal, setConfirmModal] = useState({
+    show: false,
+    id: "",
+  });
 
+  const getOfficeDetails = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/offices/${office.id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer`,
+        },
+      });
+
+      const responseData = await response.json();
+      setData({
+        ...data,
+        details: responseData.office_details,
+        searchedDetails: responseData.office_details,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   useEffect(() => {
-    const getOfficeDetails = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/offices/${office.id}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer`,
-          },
-        });
-
-        const responseData = await response.json();
-        setData({
-          ...data,
-          details: responseData.office_details,
-          searchedDetails: responseData.office_details,
-        });
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
     getOfficeDetails();
   }, []);
 
@@ -50,41 +54,35 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
     }
   };
 
-  // const handleEditButton = (student) => {
-  //   edit(student);
-  // };
-
-  // function PrintElem(elem) {
-  //   var mywindow = window.open("", "PRINT", "height=400,width=600");
-
-  //   mywindow.document.write(
-  //     "<html><head><title>" + document.title + "</title>"
-  //   );
-  //   mywindow.document.write("</head><body >");
-  //   mywindow.document.write("<h1>" + document.title + "</h1>");
-  //   mywindow.document.write(document.getElementById(elem).innerHTML);
-  //   mywindow.document.write("</body></html>");
-
-  //   mywindow.document.close(); // necessary for IE >= 10
-  //   mywindow.focus(); // necessary for IE >= 10*/
-
-  //   mywindow.print();
-  //   mywindow.close();
-
-  //   return true;
-  // }
   const printTable = () => {
     printJS({
       printable: "print-table",
       type: "html",
     });
   };
+  const handleDeleteButton = async (id) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/offices/${office.id}?office_detail_id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const responseData = await response.json();
+
+      toast.success("تم حذف الاضافة");
+      getOfficeDetails();
+    } catch (error) {
+      console.log(error.message);
+      toast.error("فشل الحذف");
+    }
+  };
 
   const render_table = () => {
     if (searchType != "0") {
       const render_data = data.searchedDetails.map((detail, index) => {
         return (
-          <tr key={office.id} className="font-weight-bold text-white">
+          <tr key={detail.id} className="font-weight-bold text-white">
             <td className="t-id">{index + 1}</td>
             <td className="t-name">{detail.renter}</td>
             <td className="">{detail.date_of_receipt}</td>
@@ -97,6 +95,20 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
                 className="btn btn-secondary text-white"
               >
                 تعديل
+              </button>
+            </td>
+            <td>
+              <button
+                onClick={() =>
+                  setConfirmModal({
+                    ...confirmModal,
+                    show: true,
+                    id: detail.id,
+                  })
+                }
+                className="btn btn-danger text-white"
+              >
+                حذف
               </button>
             </td>
           </tr>
@@ -116,6 +128,7 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
               <th className="">تاريخ الاستحقاق</th>
               <th className="">المبلغ</th>
               <th className="">الملاحظات</th>
+              <th className="">&nbsp;</th>
               <th className="">&nbsp;</th>
             </tr>
           </thead>
@@ -140,6 +153,20 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
                 تعديل
               </button>
             </td>
+            <td>
+              <button
+                onClick={() =>
+                  setConfirmModal({
+                    ...confirmModal,
+                    show: true,
+                    id: detail.id,
+                  })
+                }
+                className="btn btn-danger text-white"
+              >
+                حذف
+              </button>
+            </td>
           </tr>
         );
       });
@@ -157,6 +184,7 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
               <th className="">تاريخ الاستحقاق</th>
               <th className="">المبلغ</th>
               <th className="">الملاحظات</th>
+              <th className="">&nbsp;</th>
               <th className="">&nbsp;</th>
             </tr>
           </thead>
@@ -188,6 +216,18 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
   };
   return (
     <section className="main">
+      <ConfirmModal
+        show={confirmModal.show}
+        onHide={() =>
+          setConfirmModal({
+            ...confirmModal,
+            show: false,
+            id: "",
+          })
+        }
+        confirm={handleDeleteButton}
+        id={confirmModal.id}
+      />
       <div className="row pt-5 m-0">
         <div
           className={

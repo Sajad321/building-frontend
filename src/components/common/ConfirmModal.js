@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 
 export default function ConfirmModal(props) {
@@ -25,26 +25,22 @@ export default function ConfirmModal(props) {
         <div className="">
           <Button
             onClick={() => {
-              props.onHide();
-            }}
-            className="modal-add-nav"
-          >
-            لا
-          </Button>
-        </div>
-        <div className="">
-          <Button
-            onClick={() => {
-              props.handleToggleButton(
-                props.index,
-                props.student_id,
-                props.done
-              );
+              props.confirm(props.id);
               props.onHide();
             }}
             className="modal-add-nav"
           >
             نعم
+          </Button>
+        </div>
+        <div className="">
+          <Button
+            onClick={() => {
+              props.onHide();
+            }}
+            className="modal-add-nav"
+          >
+            لا
           </Button>
         </div>
       </Modal.Footer>

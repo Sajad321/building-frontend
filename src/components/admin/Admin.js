@@ -220,7 +220,7 @@ function Admin(props) {
         {/* End of Navbar */}
         {/* AddOfficeDetails */}
         <AddOfficeDetails
-          page={handleMainButton}
+          page={handleOfficeDetails}
           dataToChange={dataToChange}
           sideBarShow={sideBarShow}
           office={office}

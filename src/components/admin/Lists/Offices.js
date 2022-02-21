@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import printJS from "print-js";
+import ConfirmModal from "../../common/ConfirmModal";
 const apiUrl = process.env.API_URL;
 var dialog = require("electron").remote.dialog;
 
@@ -9,36 +10,69 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
   const [offices, setOffices] = useState([]);
   const [searchedOffices, setSearchedOffices] = useState([]);
   const [search, setSearch] = useState("");
+  const [confirmModal, setConfirmModal] = useState({
+    show: false,
+    id: "",
+  });
+  const getOffices = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/offices`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer`,
+        },
+      });
+
+      const responseData = await response.json();
+      setOffices(responseData.offices);
+      setSearchedOffices(responseData.offices);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
-    const getOffices = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/offices`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer`,
-          },
-        });
-
-        const responseData = await response.json();
-        setOffices(responseData.offices);
-        setSearchedOffices(responseData.offices);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
     getOffices();
   }, []);
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
+
   const handleSearchButton = (e) => {
     e.preventDefault();
     let reg = new RegExp(search, "i");
     setSearchedOffices([...offices].filter((d) => d.name.match(reg)));
   };
+
+  const handleDeleteButton = async (id) => {
+    try {
+      const response = await fetch(`${apiUrl}/offices?office_id=${id}`, {
+        method: "DELETE",
+      });
+      const responseData = await response.json();
+
+      toast.success("تم حذف المكتب");
+      getOffices();
+    } catch (error) {
+      console.log(error.message);
+      toast.error("فشل الحذف");
+    }
+  };
+
   return (
     <section className="main">
+      <ConfirmModal
+        show={confirmModal.show}
+        onHide={() =>
+          setConfirmModal({
+            ...confirmModal,
+            show: false,
+            id: "",
+          })
+        }
+        confirm={handleDeleteButton}
+        id={confirmModal.id}
+      />
       <div className="row pt-5 m-0">
         <div
           className={
@@ -82,7 +116,7 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
             {search != ""
               ? searchedOffices.map((office) => {
                   return (
-                    <div className="col-sm-3 p-2" dir="ltr" key={office.id}>
+                    <div className="col-sm-3 p-4" dir="ltr" key={office.id}>
                       <div
                         className="card card-common card-height"
                         onClick={() => {
@@ -94,6 +128,7 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
                           <div className="row">
                             <div className="col-10 col-sm-9 text-right text-white">
                               <h5>{office.name}</h5>
+                              <h6>{office.renter}</h6>
                             </div>
                             <div className="col-2 col-sm-3 p-0 text-center text-white">
                               <FontAwesomeIcon icon="users" size="3x" />
@@ -107,6 +142,19 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
                             >
                               تعديل
                             </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmModal({
+                                  ...confirmModal,
+                                  show: true,
+                                  id: office.id,
+                                });
+                              }}
+                              className="btn btn-danger text-white ml-2"
+                            >
+                              حذف
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -115,7 +163,7 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
                 })
               : offices.map((office) => {
                   return (
-                    <div className="col-sm-3 p-2" dir="ltr" key={office.id}>
+                    <div className="col-sm-3 p-4" dir="ltr" key={office.id}>
                       <div
                         className="card card-common card-height"
                         onClick={() => {
@@ -127,6 +175,7 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
                           <div className="row">
                             <div className="col-10 col-sm-9 text-right text-white">
                               <h5>{office.name}</h5>
+                              <h6>{office.renter}</h6>
                             </div>
                             <div className="col-2 col-sm-3 p-0 text-center text-white">
                               <FontAwesomeIcon icon="users" size="3x" />
@@ -139,6 +188,19 @@ function Offices({ edit, page, sideBarShow, handleOfficeDetails, setOffice }) {
                               className="btn btn-secondary text-white"
                             >
                               تعديل
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmModal({
+                                  ...confirmModal,
+                                  show: true,
+                                  id: office.id,
+                                });
+                              }}
+                              className="btn btn-danger text-white ml-2"
+                            >
+                              حذف
                             </button>
                           </div>
                         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import printJS from "print-js";
+import ConfirmModal from "../../common/ConfirmModal";
 const apiUrl = process.env.API_URL;
 
 // var { ipcRenderer } = require("electron");
@@ -11,27 +12,32 @@ function Expenses({ edit, sideBarShow }) {
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
   const [search2, setSearch2] = useState("");
+  const [confirmModal, setConfirmModal] = useState({
+    show: false,
+    id: "",
+  });
+
+  const getExpenses = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/expenses`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer`,
+        },
+      });
+
+      const responseData = await response.json();
+      setData({
+        ...data,
+        expenses: responseData.expenses,
+        searchedExpenses: responseData.expenses,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
-    const getExpenses = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/expenses`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer`,
-          },
-        });
-
-        const responseData = await response.json();
-        setData({
-          ...data,
-          expenses: responseData.expenses,
-          searchedExpenses: responseData.expenses,
-        });
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
     getExpenses();
   }, []);
   const handleSearchTypeChange = (e) => {
@@ -59,6 +65,20 @@ function Expenses({ edit, sideBarShow }) {
           (d) => d.date <= search2 && d.date >= search
         ),
       });
+    }
+  };
+  const handleDeleteButton = async (id) => {
+    try {
+      const response = await fetch(`${apiUrl}/expenses/${id}`, {
+        method: "DELETE",
+      });
+      const responseData = await response.json();
+
+      toast.success("تم حذف الصرفيات");
+      getExpenses();
+    } catch (error) {
+      console.log(error.message);
+      toast.error("فشل الحذف");
     }
   };
 
@@ -146,6 +166,20 @@ function Expenses({ edit, sideBarShow }) {
                 تعديل
               </button>
             </td>
+            <td>
+              <button
+                onClick={() =>
+                  setConfirmModal({
+                    ...confirmModal,
+                    show: true,
+                    id: expense.id,
+                  })
+                }
+                className="btn btn-danger text-white"
+              >
+                حذف
+              </button>
+            </td>
           </tr>
         );
       });
@@ -162,6 +196,7 @@ function Expenses({ edit, sideBarShow }) {
               <th className="">نوع الصرف</th>
               <th className="">المبلغ</th>
               <th className="">التاريخ</th>
+              <th>&nbsp;</th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -189,6 +224,20 @@ function Expenses({ edit, sideBarShow }) {
                 تعديل
               </button>
             </td>
+            <td>
+              <button
+                onClick={() =>
+                  setConfirmModal({
+                    ...confirmModal,
+                    show: true,
+                    id: expense.id,
+                  })
+                }
+                className="btn btn-danger text-white"
+              >
+                حذف
+              </button>
+            </td>
           </tr>
         );
       });
@@ -206,6 +255,7 @@ function Expenses({ edit, sideBarShow }) {
               <th className="">المبلغ</th>
               <th className="">التاريخ</th>
               <th>&nbsp;</th>
+              <th>&nbsp;</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -216,6 +266,18 @@ function Expenses({ edit, sideBarShow }) {
 
   return (
     <section className="main">
+      <ConfirmModal
+        show={confirmModal.show}
+        onHide={() =>
+          setConfirmModal({
+            ...confirmModal,
+            show: false,
+            id: "",
+          })
+        }
+        confirm={handleDeleteButton}
+        id={confirmModal.id}
+      />
       <div className="row pt-5 m-0">
         <div
           className={

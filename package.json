@@ -1,6 +1,6 @@
 {
   "name": "building-managment-system",
-  "version": "1.5.0",
+  "version": "1.7.0",
   "description": "System for managing a building",
   "private": false,
   "repository": {
