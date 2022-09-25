@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 const apiUrl = process.env.API_URL;
 
 function Notifications({ sideBarShow }) {
   const [notifications, setNotification] = useState([]);
   const [date, setDate] = useState(toLocalISOString(new Date()).slice(0, 10));
-  console.log(date);
-  useEffect(() => {
-    const getNotifications = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/notifications`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer`,
-          },
-        });
+  const getNotifications = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/notifications`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer`,
+        },
+      });
 
-        const responseData = await response.json();
-        setNotification(
-          responseData.notifications.filter(
-            (notification) => notification.date_of_claiming <= date
-          )
-        );
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+      const responseData = await response.json();
+      setNotification(
+        responseData.notifications.filter(
+          (notification) => notification.date_of_claiming <= date
+        )
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  useEffect(() => {
     getNotifications();
   }, []);
   const handleNotificationSeen = async (notification_id) => {
@@ -37,6 +37,23 @@ function Notifications({ sideBarShow }) {
       );
 
       const responseData = await response.json();
+    } catch (error) {
+      console.log(error.message);
+      toast.warn("حصل خطأ");
+    }
+  };
+  const handleDeleteNotification = async (notification_id) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/notifications/${notification_id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const responseData = await response.json();
+      getNotifications();
+      toast.success("تم الحذف");
     } catch (error) {
       console.log(error.message);
       toast.warn("حصل خطأ");
@@ -111,6 +128,14 @@ function Notifications({ sideBarShow }) {
                           تم
                         </button>
                       )}
+                      <button
+                        onClick={() =>
+                          handleDeleteNotification(notification.id)
+                        }
+                        className="btn btn-danger mr-3"
+                      >
+                        حذف
+                      </button>
                     </div>
                   </div>
                 </div>

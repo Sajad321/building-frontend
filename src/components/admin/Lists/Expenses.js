@@ -148,11 +148,7 @@ function Expenses({ edit, sideBarShow }) {
     if (searchType != "0") {
       const render_data = data.searchedExpenses.map((expense, index) => {
         return (
-          <tr
-            key={expense.id}
-            className="font-weight-bold text-white"
-            className=""
-          >
+          <tr key={expense.id} className="font-weight-bold text-white">
             <td className="t-id">{index + 1}</td>
             <td className="t-name">{expense.name}</td>
             <td className="">{expense.type}</td>
@@ -206,11 +202,7 @@ function Expenses({ edit, sideBarShow }) {
     } else if (searchType == "0") {
       const render_data = data.expenses.map((expense, index) => {
         return (
-          <tr
-            key={expense.id}
-            className="font-weight-bold text-white"
-            className=""
-          >
+          <tr key={expense.id} className="font-weight-bold text-white">
             <td className="t-id">{index + 1}</td>
             <td className="t-name">{expense.name}</td>
             <td className="">{expense.type}</td>

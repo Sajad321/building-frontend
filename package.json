@@ -1,6 +1,6 @@
 {
   "name": "building-managment-system",
-  "version": "1.7.0",
+  "version": "1.8.1",
   "description": "System for managing a building",
   "private": false,
   "repository": {
@@ -43,8 +43,8 @@
     "build:python": "PyInstaller --clean -F --onefile -y .\\main.spec",
     "build": "cross-env NODE_ENV=production API_URL=http://localhost:8000 webpack --config webpack.build.config.js --mode production",
     "prepackage": "rimraf ./build && mkdir build && rimraf ./dist && mkdir dist",
-    "package": "npm run build && electron-packager --win32metadata.requested-execution-level=requireAdministrator ./ --out=./build --prune --asar --extra-resource=py_main.exe --ignore=release-builds --ignore=docs --ignore=for-code",
-    "postpackage": "electron-builder --prepackaged ./build/building-managment-system-win32-x64 --publish=never"
+    "package": "npm run build",
+    "postpackage": "electron-builder build --publish=never"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.8",
@@ -100,18 +100,29 @@
     "webpack-dev-server": "^3.11.2"
   },
   "build": {
+    "files": [
+      "**/*",
+      "!**/release-builds/*",
+      "!**/docs/*",
+      "!**/for-code/*"
+    ],
+    "extraResources": [
+      "py_main.exe",
+      "db.sqlite3"
+    ],
+    "asar": true,
     "extends": null,
     "productName": "BMS-3",
     "appId": "com.app.bms-3",
     "win": {
       "target": [
         "nsis"
-      ]
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "perMachine": true
+      "allowToChangeInstallationDirectory": true
     },
     "directories": {
       "output": "release-builds/3"

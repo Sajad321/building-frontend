@@ -9,6 +9,7 @@ import AddOffice from "./Forms/AddOffice";
 import AddReceipt from "./Forms/AddReceipt";
 import AddOfficeDetails from "./Forms/AddOfficeDetails";
 import Notifications from "./Notifications";
+import Details from "./Lists/Details";
 const apiUrl = process.env.API_URL;
 
 function Admin(props) {
@@ -58,6 +59,7 @@ function Admin(props) {
         handleNotificationsButton={handleNotificationsButton}
         handleOfficesButton={handleOfficesButton}
         handleExpensesButton={handleExpensesButton}
+        handleDetailsButton={handleDetailsButton}
         handleAddOfficeButton={handleAddOfficeButton}
         handleAddReceiptButton={handleAddReceiptButton}
         sideEvent={sideEvent}
@@ -89,6 +91,11 @@ function Admin(props) {
 
   const handleExpensesButton = () => {
     setPage("Expenses");
+    setDataToChange({});
+  };
+
+  const handleDetailsButton = () => {
+    setPage("Details");
     setDataToChange({});
   };
 
@@ -182,6 +189,16 @@ function Admin(props) {
         {/* End of Navbar */}
         {/* Expenses */}
         <Expenses edit={handleEditReceiptButton} sideBarShow={sideBarShow} />
+        <AdminFooter sideBarShow={sideBarShow} />
+      </Fragment>
+    );
+  } else if (page == "Details") {
+    return (
+      <Fragment>
+        {AdminHeaderFunction({ Details: "active" })}
+        {/* End of Navbar */}
+        {/* Expenses */}
+        <Details sideBarShow={sideBarShow} />
         <AdminFooter sideBarShow={sideBarShow} />
       </Fragment>
     );

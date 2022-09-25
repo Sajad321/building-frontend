@@ -5,18 +5,20 @@ import printJS from "print-js";
 import ConfirmModal from "../../common/ConfirmModal";
 const apiUrl = process.env.API_URL;
 
-function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
+function Details({ edit, addDetails, sideBarShow, office }) {
   const [data, setData] = useState({ details: [], searchedDetails: [] });
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
+  const [search2, setSearch2] = useState("");
+  const [total, setTotal] = useState("");
   const [confirmModal, setConfirmModal] = useState({
     show: false,
     id: "",
   });
 
-  const getOfficeDetails = async () => {
+  const getDetails = async () => {
     try {
-      const response = await fetch(`${apiUrl}/offices/${office.id}`, {
+      const response = await fetch(`${apiUrl}/details`, {
         method: "GET",
         headers: {
           Authorization: `Bearer`,
@@ -24,17 +26,20 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
       });
 
       const responseData = await response.json();
+      let x = 0;
       setData({
         ...data,
-        details: responseData.office_details,
-        searchedDetails: responseData.office_details,
+        details: responseData.details,
+        searchedDetails: responseData.details,
       });
+      responseData.details.map((d) => (x += d.amount));
+      setTotal(x);
     } catch (error) {
       console.log(error.message);
     }
   };
   useEffect(() => {
-    getOfficeDetails();
+    getDetails();
   }, []);
 
   const handleSearchTypeChange = (e) => {
@@ -43,14 +48,46 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
+  const handleSearch2Change = (e) => {
+    setSearch2(e.target.value);
+  };
   const handleSearchButton = (e) => {
     e.preventDefault();
     const reg = new RegExp(search, "i");
+    let x = 0;
     if (searchType == "1") {
+      data.details
+        .filter((d) => d.office__name.match(reg))
+        .map((d) => (x += d.amount));
+      setData({
+        ...data,
+        searchedDetails: [...data.details].filter((d) =>
+          d.office__name.match(reg)
+        ),
+      });
+      setTotal(x);
+    } else if (searchType == "2") {
+      data.details
+        .filter((d) => d.renter.match(reg))
+        .map((d) => (x += d.amount));
       setData({
         ...data,
         searchedDetails: [...data.details].filter((d) => d.renter.match(reg)),
       });
+      setTotal(x);
+    } else if (searchType == "3") {
+      data.details
+        .filter(
+          (d) => d.date_of_receipt <= search2 && d.date_of_receipt >= search
+        )
+        .map((d) => (x += d.amount));
+      setData({
+        ...data,
+        searchedDetails: [...data.details].filter(
+          (d) => d.date_of_receipt <= search2 && d.date_of_receipt >= search
+        ),
+      });
+      setTotal(x);
     }
   };
 
@@ -81,33 +118,12 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
         return (
           <tr key={detail.id} className="font-weight-bold text-white">
             <td className="t-id">{index + 1}</td>
+            <td className="t-name">{detail.office__name}</td>
             <td className="t-name">{detail.renter}</td>
             <td className="">{detail.date_of_receipt}</td>
             <td className="">{detail.date_of_claiming}</td>
             <td className="">{detail.amount}</td>
             <td className="">{detail.notes}</td>
-            <td>
-              <button
-                onClick={() => edit(detail)}
-                className="btn btn-secondary text-white"
-              >
-                تعديل
-              </button>
-            </td>
-            <td>
-              <button
-                onClick={() =>
-                  setConfirmModal({
-                    ...confirmModal,
-                    show: true,
-                    id: detail.id,
-                  })
-                }
-                className="btn btn-danger text-white"
-              >
-                حذف
-              </button>
-            </td>
           </tr>
         );
       });
@@ -120,13 +136,12 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
           <thead className="thead-dark">
             <tr className="">
               <th className="t-id">ت</th>
-              <th className="t-name">الاسم</th>
+              <th className="t-name">المكتب</th>
+              <th className="t-name">المؤجر</th>
               <th className="">تاريخ الاستلام</th>
               <th className="">تاريخ الاستحقاق</th>
               <th className="">المبلغ</th>
               <th className="">الملاحظات</th>
-              <th className="">&nbsp;</th>
-              <th className="">&nbsp;</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -137,33 +152,12 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
         return (
           <tr key={detail.id} className="font-weight-bold text-white">
             <td className="t-id">{index + 1}</td>
+            <td className="t-name">{detail.office__name}</td>
             <td className="t-name">{detail.renter}</td>
             <td className="">{detail.date_of_receipt}</td>
             <td className="">{detail.date_of_claiming}</td>
             <td className="">{detail.amount}</td>
             <td className="">{detail.notes}</td>
-            <td>
-              <button
-                onClick={() => edit(detail)}
-                className="btn btn-secondary text-white"
-              >
-                تعديل
-              </button>
-            </td>
-            <td>
-              <button
-                onClick={() =>
-                  setConfirmModal({
-                    ...confirmModal,
-                    show: true,
-                    id: detail.id,
-                  })
-                }
-                className="btn btn-danger text-white"
-              >
-                حذف
-              </button>
-            </td>
           </tr>
         );
       });
@@ -176,13 +170,12 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
           <thead className="thead-dark">
             <tr className="">
               <th className="t-id">ت</th>
-              <th className="t-name">الاسم</th>
+              <th className="t-name">المكتب</th>
+              <th className="t-name">المؤجر</th>
               <th className="">تاريخ الاستلام</th>
               <th className="">تاريخ الاستحقاق</th>
               <th className="">المبلغ</th>
               <th className="">الملاحظات</th>
-              <th className="">&nbsp;</th>
-              <th className="">&nbsp;</th>
             </tr>
           </thead>
           <tbody>{render_data}</tbody>
@@ -209,22 +202,55 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
           ></input>
         </div>
       );
+    } else if (searchType == "2") {
+      return (
+        <div className="col-7">
+          <input
+            type="text"
+            className="form-control text"
+            id="searchName"
+            onChange={handleSearchChange}
+            placeholder="ابحث"
+          ></input>
+        </div>
+      );
+    } else if (searchType == "3") {
+      return (
+        <>
+          <div className="col-5 offset-2 col-md-3 offset-md-0 order-0 order-md-2">
+            <input
+              type="date"
+              className="form-control text"
+              id="searchDate"
+              onChange={handleSearchChange}
+            ></input>
+          </div>
+          <p
+            className="col-2 col-md-1 order-1 order-md-3 text-white"
+            style={{ fontSize: "20px" }}
+          >
+            من
+          </p>
+          <div className="col-5 offset-5 col-md-3 offset-md-0 order-2 order-md-0">
+            <input
+              type="date"
+              className="form-control text"
+              id="searchDate"
+              onChange={handleSearch2Change}
+            ></input>
+          </div>
+          <p
+            className="col-2 col-md-1 order-3 order-md-1 text-white"
+            style={{ fontSize: "20px" }}
+          >
+            الى
+          </p>
+        </>
+      );
     }
   };
   return (
     <section className="main">
-      <ConfirmModal
-        show={confirmModal.show}
-        onHide={() =>
-          setConfirmModal({
-            ...confirmModal,
-            show: false,
-            id: "",
-          })
-        }
-        confirm={handleDeleteButton}
-        id={confirmModal.id}
-      />
       <div className="row pt-5 m-0">
         <div
           className={
@@ -259,7 +285,9 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
                           <option value="0" defaultValue>
                             الكل
                           </option>
-                          <option value="1">الاسم</option>
+                          <option value="1">المكتب</option>
+                          <option value="2">المؤجر</option>
+                          <option value="3">تاريخ الاستلام</option>
                         </select>
                       </div>
                       {searchBar()}
@@ -271,13 +299,11 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
                     طباعة
                   </button>
                 </div>
-                <div className="col-1 pt-1">
-                  <button onClick={addDetails} className="btn btn-light">
-                    اضافة
-                  </button>
-                </div>
                 <div className="col-3">
-                  <h2 className="text text-white">المكتب رقم {office.name}</h2>
+                  <h2 className="text text-white">المجموع الكلي: {total}</h2>
+                </div>
+                <div className="col-1">
+                  <h2 className="text text-white">الايجارات</h2>
                 </div>
               </div>
             </div>
@@ -291,4 +317,4 @@ function OfficeDetails({ edit, addDetails, sideBarShow, office }) {
   );
 }
 
-export default OfficeDetails;
+export default Details;
