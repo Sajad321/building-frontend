@@ -6,11 +6,20 @@ import ConfirmModal from "../../common/ConfirmModal";
 const apiUrl = process.env.API_URL;
 
 function Details({ edit, addDetails, sideBarShow, office }) {
-  const [data, setData] = useState({ details: [], searchedDetails: [] });
+  const [data, setData] = useState({
+    details: [],
+    searchedDetails: [],
+  });
+  const [expensesData, setExpensesData] = useState({
+    expenses: [],
+    searchedExpenses: [],
+  });
   const [searchType, setSearchType] = useState("0");
   const [search, setSearch] = useState("");
   const [search2, setSearch2] = useState("");
   const [total, setTotal] = useState("");
+  const [totalExpenses, setTotalExpenses] = useState("");
+  const [totalIncome, setTotalIncome] = useState("");
   const [confirmModal, setConfirmModal] = useState({
     show: false,
     id: "",
@@ -34,6 +43,30 @@ function Details({ edit, addDetails, sideBarShow, office }) {
       });
       responseData.details.map((d) => (x += d.amount));
       setTotal(x);
+      const getExpenses = async () => {
+        try {
+          const response = await fetch(`${apiUrl}/expenses`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer`,
+            },
+          });
+
+          const responseData = await response.json();
+          let xx = 0;
+          setExpensesData({
+            ...expensesData,
+            expenses: responseData.expenses,
+            searchedExpenses: responseData.expenses,
+          });
+          responseData.expenses.map((d) => (xx += d.amount));
+          setTotalExpenses(xx);
+          setTotalIncome(x - xx);
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      getExpenses();
     } catch (error) {
       console.log(error.message);
     }
@@ -55,6 +88,7 @@ function Details({ edit, addDetails, sideBarShow, office }) {
     e.preventDefault();
     const reg = new RegExp(search, "i");
     let x = 0;
+    let xx = 0;
     if (searchType == "1") {
       data.details
         .filter((d) => d.office__name.match(reg))
@@ -81,6 +115,9 @@ function Details({ edit, addDetails, sideBarShow, office }) {
           (d) => d.date_of_receipt <= search2 && d.date_of_receipt >= search
         )
         .map((d) => (x += d.amount));
+      expensesData.expenses
+        .filter((d) => d.date <= search2 && d.date >= search)
+        .map((d) => (xx += d.amount));
       setData({
         ...data,
         searchedDetails: [...data.details].filter(
@@ -88,6 +125,8 @@ function Details({ edit, addDetails, sideBarShow, office }) {
         ),
       });
       setTotal(x);
+      setTotalExpenses(xx);
+      setTotalIncome(x - xx);
     }
   };
 
@@ -144,7 +183,17 @@ function Details({ edit, addDetails, sideBarShow, office }) {
               <th className="">الملاحظات</th>
             </tr>
           </thead>
-          <tbody>{render_data}</tbody>
+          <tbody>
+            {render_data}
+            <tr>
+              <td>المجموع الكلي</td>
+              <td>{total}</td>
+              <td>الربح الكلي</td>
+              <td>{totalIncome}</td>
+              <td>الصرفيات الكلي</td>
+              <td>{totalExpenses}</td>
+            </tr>
+          </tbody>
         </table>
       );
     } else if (searchType == "0") {
@@ -178,7 +227,17 @@ function Details({ edit, addDetails, sideBarShow, office }) {
               <th className="">الملاحظات</th>
             </tr>
           </thead>
-          <tbody>{render_data}</tbody>
+          <tbody>
+            {render_data}
+            <tr>
+              <td>المجموع الكلي</td>
+              <td>{total}</td>
+              <td>الربح الكلي</td>
+              <td>{totalIncome}</td>
+              <td>الصرفيات الكلي</td>
+              <td>{totalExpenses}</td>
+            </tr>
+          </tbody>
         </table>
       );
     }
